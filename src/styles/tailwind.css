@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Primary Colors */
+    --color-primary: #6366F1; /* indigo-500 */
+    --color-primary-foreground: #FFFFFF; /* white */
+    
+    /* Secondary Colors */
+    --color-secondary: #8B5CF6; /* violet-500 */
+    --color-secondary-foreground: #FFFFFF; /* white */
+    
+    /* Accent Colors */
+    --color-accent: #F59E0B; /* amber-500 */
+    --color-accent-foreground: #000000; /* black */
+    
+    /* Background Colors */
+    --color-background: #0F0F23; /* custom-dark-blue */
+    --color-foreground: #E2E8F0; /* slate-200 */
+    
+    /* Surface Colors */
+    --color-card: #1E1E3F; /* custom-surface */
+    --color-card-foreground: #F1F5F9; /* slate-100 */
+    
+    /* Popover Colors */
+    --color-popover: #1E1E3F; /* custom-surface */
+    --color-popover-foreground: #F1F5F9; /* slate-100 */
+    
+    /* Muted Colors */
+    --color-muted: #2E2E5F; /* custom-muted */
+    --color-muted-foreground: #94A3B8; /* slate-400 */
+    
+    /* Border & Input */
+    --color-border: #2E2E5F; /* custom-muted */
+    --color-input: #2E2E5F; /* custom-muted */
+    --color-ring: #6366F1; /* indigo-500 */
+    
+    /* Text Colors */
+    --color-text-primary: #F8FAFC; /* slate-50 */
+    --color-text-secondary: #94A3B8; /* slate-400 */
+    
+    /* Status Colors */
+    --color-success: #10B981; /* emerald-500 */
+    --color-success-foreground: #FFFFFF; /* white */
+    
+    --color-warning: #F59E0B; /* amber-500 */
+    --color-warning-foreground: #000000; /* black */
+    
+    --color-error: #EF4444; /* red-500 */
+    --color-error-foreground: #FFFFFF; /* white */
+    
+    --color-destructive: #EF4444; /* red-500 */
+    --color-destructive-foreground: #FFFFFF; /* white */
+    
+    /* Radius */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  
+  h2 {
+    font-size: 2.25rem;
+    line-height: 1.2;
+    font-weight: 600;
+  }
+  
+  h3 {
+    font-size: 1.875rem;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+  
+  h4 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    font-weight: 500;
+  }
+  
+  h5 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+  
+  caption, .caption {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    letter-spacing: 0.025em;
+  }
+  
+  .font-data {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    font-feature-settings: 'tnum' on, 'lnum' on;
+  }
+  
+  @media (max-width: 768px) {
+    body {
+      font-size: 15px;
+      line-height: 1.65;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .transition-smooth {
+    transition: all 250ms ease-out;
+  }
+  
+  .shadow-cinematic {
+    box-shadow: 0 6px 12px rgba(99, 102, 241, 0.15);
+  }
+  
+  .shadow-cinematic-lg {
+    box-shadow: 0 12px 24px rgba(99, 102, 241, 0.15);
+  }
+  
+  .shadow-depth {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  }
+  
+  .glow-primary {
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+  }
+}
