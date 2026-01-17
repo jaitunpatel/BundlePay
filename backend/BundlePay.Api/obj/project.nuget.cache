@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "fW4KdsLssrk1v2xxyXuBPHaRliJZXrHXBbK+n7IrPZI+GnTQyHGnUPqMU8UsV5rBRBy7g9mgYv2Lv2HujYnOdQ==",
+  "success": false,
+  "projectFilePath": "D:\\BundlePay\\backend\\BundlePay.Api\\BundlePay.Api.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\LocalNuget' doesn't exist.",
+      "libraryId": "Microsoft.AspNetCore.OpenApi"
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "The local source 'C:\\LocalNuget' doesn't exist.",
+      "libraryId": "Swashbuckle.AspNetCore"
+    }
+  ]
+}
