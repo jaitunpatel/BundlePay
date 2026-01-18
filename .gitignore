@@ -6,3 +6,5 @@
 **/obj/
 
 **/.vs/
+
+appsettings.Development.json
