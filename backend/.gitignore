@@ -1,0 +1,12 @@
+# .NET
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+**/.vs/
+*.user
+*.suo
+
+# Logs / temp
+*.log
