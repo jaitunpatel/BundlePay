@@ -7,7 +7,19 @@ import { Bundle } from './BundleCard';
 import Icon from '@/components/ui/AppIcon';
 import BundleComparisonPanel from '@/components/common/BundleComparisonPanel';
 
-const BundleCatalogInteractive = () => {
+type ApiBundle = {
+  id: string;
+  name: string;
+  description: string;
+  is_active: boolean;
+  created_at: string;
+};
+
+type Props = {
+  apiBundles: ApiBundle[];
+};
+
+const BundleCatalogInteractive = ({ apiBundles }: Props) => {
   const [isHydrated, setIsHydrated] = useState(false);
   const [allBundles] = useState<Bundle[]>([
   {
@@ -364,6 +376,19 @@ const BundleCatalogInteractive = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-[1400px] px-4 lg:px-6 py-8">
+        {/* API Bundles (from backend) - TEMP for testing */}
+        <div className="mb-6 rounded-lg border border-border bg-card p-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">API Bundles (backend)</h2>
+            <span className="text-sm text-text-secondary">
+              Count: {apiBundles?.length ?? 0}
+            </span>
+          </div>
+
+          <pre className="mt-3 max-h-64 overflow-auto text-xs text-text-secondary">
+            {JSON.stringify(apiBundles, null, 2)}
+          </pre>
+        </div>
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-heading font-bold text-text-primary mb-2">
