@@ -377,7 +377,7 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-[1400px] px-4 lg:px-6 py-8">
         {/* API Bundles (from backend) - TEMP for testing */}
-        <div className="mb-6 rounded-lg border border-border bg-card p-4">
+        {/* <div className="mb-6 rounded-lg border border-border bg-card p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">API Bundles (backend)</h2>
             <span className="text-sm text-text-secondary">
@@ -388,7 +388,7 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
           <pre className="mt-3 max-h-64 overflow-auto text-xs text-text-secondary">
             {JSON.stringify(apiBundles, null, 2)}
           </pre>
-        </div>
+        </div> */}
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-heading font-bold text-text-primary mb-2">
