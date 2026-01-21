@@ -1,6 +1,6 @@
 @BundlePay.Api_HostAddress = http://localhost:5192
 
-GET {{BundlePay.Api_HostAddress}}/weatherforecast/
+GET {{BundlePay.Api_HostAddress}}/api/bundles
 Accept: application/json
 
 ###

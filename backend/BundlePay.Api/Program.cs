@@ -1,5 +1,7 @@
 using BundlePay.Api.Database;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,8 +11,32 @@ if (builder.Environment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
 }
 
+// Put these in user-secrets / env vars
+var supabaseUrl = builder.Configuration["Supabase:Url"]; // https://xxxx.supabase.co
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        // Supabase Auth issuer base
+        options.Authority = $"{supabaseUrl}/auth/v1";
+        options.RequireHttpsMetadata = true;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = $"{supabaseUrl}/auth/v1",
+            ValidateAudience = false,      
+            ValidateLifetime = true,
+            NameClaimType = "sub"  
+        };
+    });
+
+
+builder.Services.AddControllers();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var cs = builder.Configuration.GetConnectionString("Default");
@@ -27,9 +53,12 @@ if (app.Environment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
+app.MapControllers();
 
-var summaries = new[]
+/*var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
@@ -55,9 +84,9 @@ app.MapGet("/api/health", () =>
         status = "ok",
         service = "BundlePay.Api"
     });
-});
+});*/
 
-app.MapGet("/api/bundles", () =>
+/*app.MapGet("/api/bundles", () =>
 {
     var bundles = new[]
     {
@@ -80,7 +109,7 @@ app.MapGet("/api/bundles", () =>
     };
 
     return Results.Ok(bundles);
-});
+});*/
 
 app.Run();
 
