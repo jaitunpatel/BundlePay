@@ -19,8 +19,17 @@ type Bundle = {
 export default async function BundleCatalogPage() {
   const res = await fetch('http://localhost:5192/api/bundles', { cache: 'no-store' });
 
-  // if backend is down or error, show empty list (no crash)
-  const initialBundles: Bundle[] = res.ok ? await res.json() : [];
+const data = res.ok ? await res.json() : [];
+
+const initialBundles: Bundle[] = Array.isArray(data)
+  ? data.map((b: any) => ({
+      id: b.Id,
+      name: b.Name,
+      description: b.Description,
+      is_active: b.IsActive,
+      created_at: b.CreatedAt,
+    }))
+  : [];
 
   return (
     <main className="min-h-screen bg-background">

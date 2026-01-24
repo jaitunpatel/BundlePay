@@ -21,11 +21,11 @@ type Props = {
 
 const BundleCatalogInteractive = ({ apiBundles }: Props) => {
   const [isHydrated, setIsHydrated] = useState(false);
-  const [allBundles] = useState<Bundle[]>([
+  const templateBundles: Bundle[] = [
   {
-    id: '1',
-    name: 'Entertainment Plus Bundle',
-    description: 'Stream unlimited movies, TV shows, and exclusive originals across top entertainment platforms.',
+    id: '',
+    name: '',
+    description: '',
     price: 29.99,
     originalPrice: 44.97,
     savings: 14.98,
@@ -43,9 +43,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     popular: true
   },
   {
-    id: '2',
-    name: 'Sports Fanatic Package',
-    description: 'Never miss a game with comprehensive coverage of live sports, replays, and exclusive sports content.',
+    id: '',
+    name: '',
+    description: '',
     price: 39.99,
     originalPrice: 59.97,
     savings: 19.98,
@@ -63,9 +63,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     popular: true
   },
   {
-    id: '3',
-    name: 'Kids & Family Bundle',
-    description: 'Safe, educational, and entertaining content for children of all ages with parental controls.',
+    id: '',
+    name: '',
+    description: '',
     price: 24.99,
     originalPrice: 34.97,
     savings: 9.98,
@@ -82,9 +82,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     imageAlt: 'Happy family with two children watching animated content together on tablet in cozy home setting'
   },
   {
-    id: '4',
-    name: 'Premium Movie Collection',
-    description: 'Access to the latest blockbusters, classic films, and exclusive premieres from premium channels.',
+    id: '',
+    name: '',
+    description: '',
     price: 34.99,
     originalPrice: 49.97,
     savings: 14.98,
@@ -101,9 +101,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     imageAlt: 'Home theater setup with large screen showing movie scene, surround sound speakers and comfortable seating'
   },
   {
-    id: '5',
-    name: 'News & Documentary Hub',
-    description: 'Stay informed with 24/7 news coverage and award-winning documentaries from trusted sources.',
+    id: '',
+    name: '',
+    description: '',
     price: 19.99,
     originalPrice: 29.97,
     savings: 9.98,
@@ -120,9 +120,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     imageAlt: 'Professional news studio with multiple monitors displaying live broadcasts and world map graphics'
   },
   {
-    id: '6',
-    name: 'Music & Concert Bundle',
-    description: 'Unlimited music streaming and exclusive live concert performances from your favorite artists.',
+    id: '',
+    name: '',
+    description: '',
     price: 27.99,
     originalPrice: 39.97,
     savings: 11.98,
@@ -139,9 +139,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     imageAlt: 'Live concert with crowd enjoying performance, colorful stage lights and energetic atmosphere'
   },
   {
-    id: '7',
-    name: 'Fitness & Wellness Package',
-    description: 'Transform your health with guided workouts, yoga sessions, and wellness content from top instructors.',
+    id: '',
+    name: '',
+    description: '',
     price: 22.99,
     originalPrice: 32.97,
     savings: 9.98,
@@ -158,9 +158,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     imageAlt: 'Modern home gym with yoga mat, dumbbells and person doing workout following online fitness class'
   },
   {
-    id: '8',
-    name: 'Gaming & Esports Bundle',
-    description: 'Access to gaming content, esports tournaments, and exclusive gaming community features.',
+    id: '',
+    name: '',
+    description: '',
     price: 32.99,
     originalPrice: 47.97,
     savings: 14.98,
@@ -177,9 +177,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     imageAlt: 'Gaming setup with RGB lighting, multiple monitors showing esports tournament and gaming peripherals'
   },
   {
-    id: '9',
-    name: 'International Content Bundle',
-    description: 'Explore global entertainment with international shows, movies, and content from around the world.',
+    id: '',
+    name: '',
+    description: '',
     price: 26.99,
     originalPrice: 37.97,
     savings: 10.98,
@@ -196,9 +196,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     imageAlt: 'Diverse group of people watching international content with subtitles on large screen in modern apartment'
   },
   {
-    id: '10',
-    name: 'Educational Learning Bundle',
-    description: 'Expand your knowledge with courses, tutorials, and educational content from leading platforms.',
+    id: '',
+    name: '',
+    description: '',
     price: 29.99,
     originalPrice: 44.97,
     savings: 14.98,
@@ -215,9 +215,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     imageAlt: 'Student taking online course on laptop with notebooks and coffee in bright study space'
   },
   {
-    id: '11',
-    name: 'Anime & Manga Collection',
-    description: 'Dive into the world of anime with extensive libraries of classic and new series plus manga content.',
+    id: '',
+    name: '',
+    description: '',
     price: 21.99,
     originalPrice: 31.97,
     savings: 9.98,
@@ -234,9 +234,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     imageAlt: 'Anime fan watching colorful animated series on TV with manga collection displayed on shelf'
   },
   {
-    id: '12',
-    name: 'Cooking & Food Network Bundle',
-    description: 'Master culinary skills with cooking shows, recipes, and food content from celebrity chefs.',
+    id: '',
+    name: '',
+    description: '',
     price: 18.99,
     originalPrice: 26.97,
     savings: 7.98,
@@ -251,8 +251,21 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     category: 'Entertainment',
     image: "https://img.rocket.new/generatedImages/rocket_gen_img_13fba65c6-1766816197390.png",
     imageAlt: 'Professional chef preparing gourmet meal in modern kitchen following online cooking tutorial'
-  }]
-  );
+  }
+  ];
+
+  const allBundles: Bundle[] =
+  apiBundles && apiBundles.length > 0
+    ? apiBundles.map((b, i) => {
+        const t = templateBundles[i % templateBundles.length];
+        return {
+          ...t,
+          id: b.id,
+          name: b.name,
+          description: b.description,
+        };
+      })
+    : templateBundles;
 
   const [filteredBundles, setFilteredBundles] = useState<Bundle[]>(allBundles);
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
