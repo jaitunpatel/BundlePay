@@ -1,17 +1,35 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BundlePay.Api.Database;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BundlePay.Api.Controllers;
 
 [ApiController]
 [Route("api/bundles")]
-public class BundlesController : Controller
+public class BundlesController : ControllerBase
 {
-    [HttpGet]
-    [Authorize]
-    public IActionResult Get() 
+    private readonly AppDbContext _db;
+
+    public BundlesController(AppDbContext db)
     {
-        var userId = User.FindFirst("sub")?.Value;
-        return Ok(new { userId });
+        _db = db;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        var bundles = await _db.Bundles
+            .OrderByDescending(b => b.CreatedAt)
+            .Select(b => new
+            {
+                b.Id,
+                b.Name,
+                b.Description,
+                b.IsActive,
+                b.CreatedAt
+            })
+            .ToListAsync();
+
+        return Ok(bundles);
     }
 }

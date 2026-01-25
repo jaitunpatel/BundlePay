@@ -34,10 +34,12 @@ const BundleGrid = ({
   const loadMore = () => {
     setIsLoading(true);
     setTimeout(() => {
-      const currentLength = displayedBundles.length;
-      const nextBundles = bundles.slice(currentLength, currentLength + itemsPerPage);
-      setDisplayedBundles([...displayedBundles, ...nextBundles]);
-      setHasMore(currentLength + itemsPerPage < bundles.length);
+      setDisplayedBundles((prev) => {
+        const currentLength = prev.length;
+        const nextBundles = bundles.slice(currentLength, currentLength + itemsPerPage);
+        setHasMore(currentLength + nextBundles.length < bundles.length);
+        return [...prev, ...nextBundles];
+      });
       setIsLoading(false);
     }, 800);
   };

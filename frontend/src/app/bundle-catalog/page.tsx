@@ -23,11 +23,11 @@ const data = res.ok ? await res.json() : [];
 
 const initialBundles: Bundle[] = Array.isArray(data)
   ? data.map((b: any) => ({
-      id: b.Id,
-      name: b.Name,
-      description: b.Description,
-      is_active: b.IsActive,
-      created_at: b.CreatedAt,
+      id: b.id,
+      name: b.name,
+      description: b.description,
+      is_active: b.isActive,
+      created_at: b.createdAt,
     }))
   : [];
 
