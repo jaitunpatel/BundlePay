@@ -26,11 +26,15 @@ public class AppDbContext : DbContext
             .HasForeignKey(x => x.BundleId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<BundleItem>()
-            .HasOne(x => x.Service)
-            .WithMany(s => s.BundleItems)
-            .HasForeignKey(x => x.ServiceId)
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<BundleItem>(e =>
+        {
+            e.HasIndex(x => new { x.BundleId, x.ServiceId }).IsUnique();
+            
+            e.HasOne(x => x.Service)
+             .WithMany(s => s.BundleItems)
+             .HasForeignKey(x => x.ServiceId)
+             .OnDelete(DeleteBehavior.Restrict);
+        });
 
         modelBuilder.Entity<BundleItem>()
             .HasIndex(x => x.BundleId);

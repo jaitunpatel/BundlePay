@@ -1,14 +1,17 @@
-﻿namespace BundlePay.Api.Entites;
+﻿using BundlePay.Api.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Service
+namespace BundlePay.Api.Entites;
+
+public class Service : BaseEntity
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-
+    [Required, MaxLength(140)]
     public string Name { get; set; } = default!;
-    public bool IsActive { get; set; } = true;
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-    public ICollection<BundleItem> BundleItems { get; set; } = new List<BundleItem>();
+    public ServiceStatus ServiceStatus { get; set; } = ServiceStatus.Active;
+    
+    [Column(TypeName = "numeric(12,2)")]
+    public decimal Price { get; set; }
+    public ICollection<BundleItem> BundleItems { get; set; } = [];
 }
 
