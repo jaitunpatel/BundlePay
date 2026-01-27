@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { WAITLIST_MODE } from "@/lib/flag";
 import Icon from '@/components/ui/AppIcon';
 import AppImage from '@/components/ui/AppImage';
 import Link from 'next/link';
@@ -17,8 +18,6 @@ export interface Bundle {
   rating: number;
   reviewCount: number;
   category: string;
-  image: string;
-  imageAlt: string;
   popular?: boolean;
 }
 
@@ -46,69 +45,12 @@ const BundleCard = ({
   isInComparison,
 }: BundleCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
-  const savingsPercentage = Math.round((bundle.savings / bundle.originalPrice) * 100);
+const savingsPercentage =
+  bundle.originalPrice > 0 ? Math.round((bundle.savings / bundle.originalPrice) * 100) : 0;
 
   return (
-    <div className="bg-card rounded-lg overflow-hidden shadow-cinematic hover:shadow-cinematic-lg transition-smooth group">
-      {/* Image Section */}
-      <div className="relative h-48 overflow-hidden bg-muted">
-        <AppImage
-          src={bundle.image}
-          alt={bundle.imageAlt}
-          className={`w-full h-full object-cover transition-smooth group-hover:scale-105 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          onLoad={() => setImageLoaded(true)}
-        />
-        {!imageLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Icon name="PhotoIcon" size={48} variant="outline" className="text-muted-foreground animate-pulse" />
-          </div>
-        )}
-        
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {bundle.popular && (
-            <span className="px-3 py-1 bg-accent text-accent-foreground text-xs font-bold rounded-full shadow-depth">
-              POPULAR
-            </span>
-          )}
-          {savingsPercentage > 0 && (
-            <span className="px-3 py-1 bg-success text-success-foreground text-xs font-bold rounded-full shadow-depth">
-              SAVE {savingsPercentage}%
-            </span>
-          )}
-        </div>
-
-        {/* Quick Actions */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2">
-          <button
-            onClick={() => onToggleWishlist(bundle.id)}
-            className={`p-2 rounded-full backdrop-blur-sm transition-smooth ${
-              isInWishlist
-                ? 'bg-error text-error-foreground'
-                : 'bg-background/80 text-text-secondary hover:text-error'
-            }`}
-            aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-          >
-            <Icon name="HeartIcon" size={20} variant={isInWishlist ? 'solid' : 'outline'} />
-          </button>
-          <button
-            onClick={() => onToggleCompare(bundle.id)}
-            className={`p-2 rounded-full backdrop-blur-sm transition-smooth ${
-              isInComparison
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-background/80 text-text-secondary hover:text-primary'
-            }`}
-            aria-label={isInComparison ? 'Remove from comparison' : 'Add to comparison'}
-          >
-            <Icon name="ScaleIcon" size={20} variant={isInComparison ? 'solid' : 'outline'} />
-          </button>
-        </div>
-      </div>
-
+    <div className="relative bg-card rounded-lg overflow-hidden shadow-cinematic hover:shadow-cinematic-lg transition-smooth group">
       {/* Content Section */}
       <div className="p-4">
         {/* Category & Rating */}
@@ -116,11 +58,19 @@ const BundleCard = ({
           <span className="text-xs px-2 py-1 bg-primary/20 text-primary rounded font-medium">
             {bundle.category}
           </span>
-          <div className="flex items-center gap-1">
-            <Icon name="StarIcon" size={16} variant="solid" className="text-accent" />
-            <span className="text-sm font-data font-medium text-text-primary">{bundle.rating}</span>
-            <span className="text-xs text-text-secondary">({bundle.reviewCount})</span>
-          </div>
+        </div>
+
+        {/* Badges */}
+        <div className="absolute top-3 right-3 z-10">
+          {savingsPercentage > 0 ? (
+            <span className="px-3 py-1 bg-success text-success-foreground text-xs font-bold rounded-full shadow-depth">
+              SAVE {savingsPercentage}%
+            </span>
+          ) : bundle.popular ? (
+            <span className="px-3 py-1 bg-accent text-accent-foreground text-xs font-bold rounded-full shadow-depth">
+              POPULAR
+            </span>
+          ) : null}
         </div>
 
         {/* Bundle Name */}
@@ -128,29 +78,23 @@ const BundleCard = ({
           {bundle.name}
         </h3>
 
-        {/* Description */}
-        <p className="text-sm text-text-secondary mb-3 line-clamp-2">
-          {bundle.description}
-        </p>
-
         {/* Platform Logos */}
         <div className="flex items-center gap-2 mb-3 flex-wrap">
-          {bundle.platforms.slice(0, 4).map((platform, idx) => (
-            <div
-              key={idx}
-              className="w-10 h-10 rounded-md bg-muted flex items-center justify-center overflow-hidden"
-              title={platform.name}
-            >
-              <AppImage
-                src={platform.logo}
-                alt={platform.logoAlt}
-                className="w-8 h-8 object-contain"
-              />
+          {bundle.platforms.slice(0, 3).map((platform) => (
+            <div key={platform.name} className="flex flex-col items-center gap-1" title={platform.name}>
+              <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden border border-border/40">
+                <AppImage src={platform.logo} alt={platform.logoAlt} className="w-11 h-11 object-contain" />
+              </div>
+
+              {/* small label */}
+              <span className="text-xs font-medium text-text-secondary max-w-[64px] truncate">
+                {platform.name}
+              </span>
             </div>
           ))}
           {bundle.platforms.length > 4 && (
             <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center text-xs font-medium text-text-secondary">
-              +{bundle.platforms.length - 4}
+              +{bundle.platforms.length - 3}
             </div>
           )}
         </div>
@@ -194,8 +138,12 @@ const BundleCard = ({
             onClick={() => onAddToCart(bundle.id)}
             className="flex-1 py-2.5 px-4 bg-primary text-primary-foreground font-medium rounded-md hover:shadow-glow-primary transition-smooth flex items-center justify-center gap-2"
           >
-            <Icon name="ShoppingCartIcon" size={18} variant="outline" />
-            <span>Add to Cart</span>
+            <Icon
+              name={WAITLIST_MODE ? "LockClosedIcon" : "ShoppingCartIcon"}
+              size={18}
+              variant="outline"
+            />
+            <span>{WAITLIST_MODE ? "Join Waitlist" : "Add to Cart"}</span>
           </button>
           <Link
             href={`/bundle-details?id=${bundle.id}`}
