@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { WAITLIST_MODE } from "@/lib/flag";
 import Icon from '@/components/ui/AppIcon';
 import Link from 'next/link';
 
@@ -16,6 +17,8 @@ interface ShoppingCartIndicatorProps {
 }
 
 const ShoppingCartIndicator = ({ className = '' }: ShoppingCartIndicatorProps) => {
+  if (WAITLIST_MODE) return null;
+
   const [isOpen, setIsOpen] = useState(false);
   const [cartItems] = useState<CartItem[]>([
     {

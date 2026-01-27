@@ -10,12 +10,21 @@ import TrustSignalsSection from './TrustSignalsSection';
 import Footer from './Footer';
 import BundleComparisonPanel from '@/components/common/BundleComparisonPanel';
 
-const LandingPageInteractive = () => {
+type LandingPageInteractiveProps = {
+  waitlistMode: boolean;
+};
+
+const LandingPageInteractive = ({ waitlistMode }: LandingPageInteractiveProps) => {
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      {waitlistMode && (
+        <div className="mx-auto mt-4 w-fit rounded-full bg-yellow-500/20 px-4 py-1 text-xs font-semibold text-yellow-300">
+          WAITLIST MODE ON
+        </div>
+      )}
       <HeroSection />
       <FeaturedBundlesCarousel />
       <BenefitsSection />
