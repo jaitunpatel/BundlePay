@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import LandingPageInteractive from './components/LandingPageInteractive';
+import { WAITLIST_MODE } from "@/lib/flag";
 
 export const metadata: Metadata = {
   title: 'StreamBundle - Bundle Your Favorite Streaming Platforms & Save Up to 40%',
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function LandingPage() {
-  return <LandingPageInteractive />;
+  return <LandingPageInteractive waitlistMode={WAITLIST_MODE}/>;
 }

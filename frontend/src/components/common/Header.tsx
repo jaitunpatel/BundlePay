@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { WAITLIST_MODE } from "@/lib/flag";
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
 import ShoppingCartIndicator from '@/components/common/ShoppingCartIndicator';
@@ -18,7 +19,10 @@ const Header = ({ className = '' }: HeaderProps) => {
   const navigationItems = [
     { label: 'Bundles', path: '/bundle-catalog', icon: 'RectangleStackIcon' },
     { label: 'My Subscriptions', path: '/subscription-management', icon: 'CreditCardIcon', requiresAuth: true },
-  ];
+  ].filter((item) => {
+    if (!WAITLIST_MODE) return true;
+    return item.path !== '/subscription-management';
+  });
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);

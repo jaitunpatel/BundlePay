@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import { WAITLIST_MODE } from "@/lib/flag";
 import FilterPanel, { FilterState } from './FilterPanel';
 import BundleGrid from './BundleGrid';
 import { Bundle } from './BundleCard';
@@ -20,6 +22,7 @@ type Props = {
 };
 
 const BundleCatalogInteractive = ({ apiBundles }: Props) => {
+  const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
   const templateBundles: Bundle[] = [
   {
@@ -38,8 +41,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.8,
     reviewCount: 2847,
     category: 'Entertainment',
-    image: "https://images.unsplash.com/photo-1669301048918-6ca9a3cd39c1",
-    imageAlt: 'Modern living room with large TV displaying streaming content, comfortable gray sofa and ambient lighting',
     popular: true
   },
   {
@@ -58,8 +59,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.6,
     reviewCount: 1923,
     category: 'Sports',
-    image: "https://images.unsplash.com/photo-1576250223658-05e6e593d8ce",
-    imageAlt: 'Basketball court with players in action during intense game under bright stadium lights',
     popular: true
   },
   {
@@ -78,8 +77,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.9,
     reviewCount: 3421,
     category: 'Kids & Family',
-    image: "https://img.rocket.new/generatedImages/rocket_gen_img_1dd5e3e25-1764671590828.png",
-    imageAlt: 'Happy family with two children watching animated content together on tablet in cozy home setting'
   },
   {
     id: '',
@@ -97,8 +94,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.7,
     reviewCount: 2156,
     category: 'Premium',
-    image: "https://images.unsplash.com/photo-1699134816591-b4104e23eaa9",
-    imageAlt: 'Home theater setup with large screen showing movie scene, surround sound speakers and comfortable seating'
   },
   {
     id: '',
@@ -116,8 +111,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.5,
     reviewCount: 1687,
     category: 'News & Documentaries',
-    image: "https://img.rocket.new/generatedImages/rocket_gen_img_1481fdfbe-1764649592082.png",
-    imageAlt: 'Professional news studio with multiple monitors displaying live broadcasts and world map graphics'
   },
   {
     id: '',
@@ -135,8 +128,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.8,
     reviewCount: 3892,
     category: 'Entertainment',
-    image: "https://images.unsplash.com/photo-1722332998970-f2335db8ab6d",
-    imageAlt: 'Live concert with crowd enjoying performance, colorful stage lights and energetic atmosphere'
   },
   {
     id: '',
@@ -154,8 +145,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.7,
     reviewCount: 2341,
     category: 'Entertainment',
-    image: "https://img.rocket.new/generatedImages/rocket_gen_img_16575d52c-1766819138693.png",
-    imageAlt: 'Modern home gym with yoga mat, dumbbells and person doing workout following online fitness class'
   },
   {
     id: '',
@@ -173,8 +162,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.6,
     reviewCount: 1876,
     category: 'Entertainment',
-    image: "https://images.unsplash.com/photo-1708032565079-f43e698f4db9",
-    imageAlt: 'Gaming setup with RGB lighting, multiple monitors showing esports tournament and gaming peripherals'
   },
   {
     id: '',
@@ -192,8 +179,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.5,
     reviewCount: 1543,
     category: 'Entertainment',
-    image: "https://images.unsplash.com/photo-1722573783625-eceb04251036",
-    imageAlt: 'Diverse group of people watching international content with subtitles on large screen in modern apartment'
   },
   {
     id: '',
@@ -211,8 +196,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.9,
     reviewCount: 4123,
     category: 'Entertainment',
-    image: "https://images.unsplash.com/photo-1713998740833-f76168c04676",
-    imageAlt: 'Student taking online course on laptop with notebooks and coffee in bright study space'
   },
   {
     id: '',
@@ -230,8 +213,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.8,
     reviewCount: 3654,
     category: 'Entertainment',
-    image: "https://images.unsplash.com/photo-1558259264-4b90e1616e5c",
-    imageAlt: 'Anime fan watching colorful animated series on TV with manga collection displayed on shelf'
   },
   {
     id: '',
@@ -249,8 +230,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     rating: 4.6,
     reviewCount: 1987,
     category: 'Entertainment',
-    image: "https://img.rocket.new/generatedImages/rocket_gen_img_13fba65c6-1766816197390.png",
-    imageAlt: 'Professional chef preparing gourmet meal in modern kitchen following online cooking tutorial'
   }
   ];
 
@@ -321,6 +300,10 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
   };
 
   const handleAddToCart = (bundleId: string) => {
+    if (WAITLIST_MODE) {
+      router.push("/waitlist?from=/bundle-catalog");
+      return;
+    }
     const bundle = allBundles.find((b) => b.id === bundleId);
     if (bundle) {
       setCartNotification(`${bundle.name} added to cart!`);
@@ -389,20 +372,6 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-[1400px] px-4 lg:px-6 py-8">
-        {/* API Bundles (from backend) - TEMP for testing */}
-        {/* <div className="mb-6 rounded-lg border border-border bg-card p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">API Bundles (backend)</h2>
-            <span className="text-sm text-text-secondary">
-              Count: {apiBundles?.length ?? 0}
-            </span>
-          </div>
-
-          <pre className="mt-3 max-h-64 overflow-auto text-xs text-text-secondary">
-            {JSON.stringify(apiBundles, null, 2)}
-          </pre>
-        </div> */}
-        {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-heading font-bold text-text-primary mb-2">
             Bundle Catalog
@@ -410,6 +379,11 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
           <p className="text-text-secondary">
             Discover and compare the perfect streaming bundle for your entertainment needs
           </p>
+          {WAITLIST_MODE && (
+            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/70">
+              🔒 Early access preview. Join the waitlist to subscribe.
+            </div>
+          )}
         </div>
 
         {/* Main Content */}
