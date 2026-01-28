@@ -1,0 +1,18 @@
+@page
+@model BundlePay.Api.Pages.Admin.Services.DetailsModel
+
+<h2>Service Details</h2>
+
+<div class="card">
+    <p><strong>Id:</strong> @Model.Service.Id</p>
+    <p><strong>Name:</strong> @Model.Service.Name</p>
+    <p><strong>Status:</strong> @Model.Service.ServiceStatus</p>
+    <p><strong>Price:</strong> @Model.Service.Price</p>
+    <p><strong>Created:</strong> @Model.Service.CreatedAt.ToString("u")</p>
+    <p><strong>Updated:</strong> @Model.Service.UpdatedAt.ToString("u")</p>
+</div>
+
+<p>
+    <a class="link" href="/Admin/Services/Edit?id=@Model.Service.Id">Edit</a>
+    <a class="link" href="/Admin/Services">Back</a>
+</p>

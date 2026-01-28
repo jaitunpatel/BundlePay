@@ -1,0 +1,16 @@
+@page
+@model BundlePay.Api.Pages.Admin.BundleItems.DetailsModel
+
+<h2>Bundle Item Details</h2>
+
+<div class="card">
+    <p><strong>Bundle:</strong> @Model.BundleItem.Bundle.Name</p>
+    <p><strong>Service:</strong> @Model.BundleItem.Service.Name</p>
+    <p><strong>Quantity:</strong> @Model.BundleItem.Quantity</p>
+    <p><strong>Sort Order:</strong> @Model.BundleItem.SortOrder</p>
+</div>
+
+<p>
+    <a class="link" href="/Admin/BundleItems/Edit?bundleId=@Model.BundleItem.BundleId&serviceId=@Model.BundleItem.ServiceId">Edit</a>
+    <a class="link" href="/Admin/BundleItems">Back</a>
+</p>

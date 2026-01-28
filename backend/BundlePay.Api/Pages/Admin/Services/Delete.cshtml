@@ -1,0 +1,14 @@
+@page
+@model BundlePay.Api.Pages.Admin.Services.DeleteModel
+
+<h2>Delete Service</h2>
+
+<div class="card">
+    <p>Are you sure you want to delete <strong>@Model.Service.Name</strong>?</p>
+</div>
+
+<form method="post">
+    <input type="hidden" asp-for="Service.Id" />
+    <button class="button" type="submit">Delete</button>
+    <a class="link" href="/Admin/Services">Cancel</a>
+</form>

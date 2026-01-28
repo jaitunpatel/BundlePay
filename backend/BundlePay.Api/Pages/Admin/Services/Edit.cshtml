@@ -1,0 +1,26 @@
+@page
+@model BundlePay.Api.Pages.Admin.Services.EditModel
+
+<h2>Edit Service</h2>
+
+<form method="post" class="card">
+    <input type="hidden" asp-for="Service.Id" />
+    <div class="form-row">
+        <label>Id</label>
+        <input value="@Model.Service.Id" readonly />
+    </div>
+    <div class="form-row">
+        <label asp-for="Service.Name"></label>
+        <input asp-for="Service.Name" />
+    </div>
+    <div class="form-row">
+        <label asp-for="Service.Price"></label>
+        <input asp-for="Service.Price" />
+    </div>
+    <div class="form-row">
+        <label asp-for="Service.ServiceStatus"></label>
+        <select asp-for="Service.ServiceStatus" asp-items="Model.Statuses"></select>
+    </div>
+    <button class="button" type="submit">Save</button>
+    <a class="link" href="/Admin/Services">Cancel</a>
+</form>

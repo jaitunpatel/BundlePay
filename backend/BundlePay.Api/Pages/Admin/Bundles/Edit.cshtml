@@ -1,0 +1,41 @@
+@page
+@model BundlePay.Api.Pages.Admin.Bundles.EditModel
+
+<h2>Edit Bundle</h2>
+
+<form method="post" class="card">
+    <input type="hidden" asp-for="Bundle.Id" />
+    <div class="form-row">
+        <label>Id</label>
+        <input value="@Model.Bundle.Id" readonly />
+    </div>
+    <div class="form-row">
+        <label asp-for="Bundle.Name"></label>
+        <input asp-for="Bundle.Name" />
+    </div>
+    <div class="form-row">
+        <label asp-for="Bundle.Description"></label>
+        <textarea asp-for="Bundle.Description"></textarea>
+    </div>
+    <div class="form-row">
+        <label asp-for="Bundle.Price"></label>
+        <input asp-for="Bundle.Price" />
+    </div>
+    <div class="form-row">
+        <label asp-for="Bundle.BundleType"></label>
+        <select asp-for="Bundle.BundleType" asp-items="Model.BundleTypes"></select>
+    </div>
+    <div class="form-row">
+        <label asp-for="Bundle.OwnerUserId"></label>
+        <input asp-for="Bundle.OwnerUserId" />
+    </div>
+    <div class="form-row">
+        <label asp-for="Bundle.IsActive"></label>
+        <select asp-for="Bundle.IsActive">
+            <option value="true">true</option>
+            <option value="false">false</option>
+        </select>
+    </div>
+    <button class="button" type="submit">Save</button>
+    <a class="link" href="/Admin/Bundles">Cancel</a>
+</form>

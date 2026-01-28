@@ -1,0 +1,27 @@
+@page
+@model BundlePay.Api.Pages.Admin.BundleItems.EditModel
+
+<h2>Edit Bundle Item</h2>
+
+<form method="post" class="card">
+    <input type="hidden" asp-for="BundleItem.BundleId" />
+    <input type="hidden" asp-for="BundleItem.ServiceId" />
+    <div class="form-row">
+        <label>Bundle</label>
+        <input value="@Model.BundleName" readonly />
+    </div>
+    <div class="form-row">
+        <label>Service</label>
+        <input value="@Model.ServiceName" readonly />
+    </div>
+    <div class="form-row">
+        <label asp-for="BundleItem.Quantity"></label>
+        <input asp-for="BundleItem.Quantity" />
+    </div>
+    <div class="form-row">
+        <label asp-for="BundleItem.SortOrder"></label>
+        <input asp-for="BundleItem.SortOrder" />
+    </div>
+    <button class="button" type="submit">Save</button>
+    <a class="link" href="/Admin/BundleItems">Cancel</a>
+</form>

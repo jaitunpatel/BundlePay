@@ -1,0 +1,15 @@
+@page
+@model BundlePay.Api.Pages.Admin.Bundles.DeleteModel
+
+<h2>Delete Bundle</h2>
+
+<div class="card">
+    <p>Are you sure you want to delete <strong>@Model.Bundle.Name</strong>?</p>
+    <p class="muted">This will also remove any bundle items.</p>
+</div>
+
+<form method="post">
+    <input type="hidden" asp-for="Bundle.Id" />
+    <button class="button" type="submit">Delete</button>
+    <a class="link" href="/Admin/Bundles">Cancel</a>
+</form>

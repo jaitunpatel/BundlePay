@@ -1,0 +1,33 @@
+@page
+@model BundlePay.Api.Pages.Admin.BundleItems.IndexModel
+
+<h2>Bundle Items</h2>
+<p><a class="link" href="/Admin/BundleItems/Create">Create new bundle item</a></p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Bundle</th>
+            <th>Service</th>
+            <th>Quantity</th>
+            <th>Sort Order</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.BundleItems)
+    {
+        <tr>
+            <td>@item.Bundle.Name</td>
+            <td>@item.Service.Name</td>
+            <td>@item.Quantity</td>
+            <td>@item.SortOrder</td>
+            <td class="actions">
+                <a class="link" href="/Admin/BundleItems/Details?bundleId=@item.BundleId&serviceId=@item.ServiceId">Details</a>
+                <a class="link" href="/Admin/BundleItems/Edit?bundleId=@item.BundleId&serviceId=@item.ServiceId">Edit</a>
+                <a class="link" href="/Admin/BundleItems/Delete?bundleId=@item.BundleId&serviceId=@item.ServiceId">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
