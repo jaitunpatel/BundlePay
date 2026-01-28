@@ -1,6 +1,5 @@
-﻿using BundlePay.Api.Database;
+using BundlePay.Api.Queries;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BundlePay.Api.Controllers;
 
@@ -8,28 +7,17 @@ namespace BundlePay.Api.Controllers;
 [Route("api/bundles")]
 public class BundlesController : ControllerBase
 {
-    private readonly AppDbContext _db;
+    private readonly BundlesQuery _bundlesQuery;
 
-    public BundlesController(AppDbContext db)
+    public BundlesController(BundlesQuery bundlesQuery)
     {
-        _db = db;
+        _bundlesQuery = bundlesQuery;
     }
 
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var bundles = await _db.Bundles
-            .OrderByDescending(b => b.CreatedAt)
-            .Select(b => new
-            {
-                b.Id,
-                b.Name,
-                b.Description,
-                b.IsActive,
-                b.CreatedAt
-            })
-            .ToListAsync();
-
+        var bundles = await _bundlesQuery.GetBundlesAsync();
         return Ok(bundles);
     }
 }

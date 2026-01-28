@@ -1,7 +1,10 @@
+using System.Data;
 using BundlePay.Api.Database;
+using BundlePay.Api.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +45,8 @@ builder.Services.AddSwaggerGen();
 var cs = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseNpgsql(cs));
+builder.Services.AddScoped<IDbConnection>(_ => new NpgsqlConnection(cs));
+builder.Services.AddScoped<BundlesQuery>();
 
 var app = builder.Build();
 
