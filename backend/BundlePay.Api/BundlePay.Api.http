@@ -3,4 +3,10 @@
 GET {{BundlePay.Api_HostAddress}}/api/bundles
 Accept: application/json
 
+
+
 ###
+
+GET {{BundlePay.Api_HostAddress}}/api/services
+Accept: application/json
+

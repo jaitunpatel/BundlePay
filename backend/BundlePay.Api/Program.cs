@@ -69,6 +69,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseNpgsql(cs));
 builder.Services.AddScoped<IDbConnection>(_ => new NpgsqlConnection(cs));
 builder.Services.AddScoped<BundlesQuery>();
+builder.Services.AddScoped<ServicesQuery>();
 
 var app = builder.Build();
 
