@@ -16,5 +16,6 @@ public class Bundle : BaseEntity
     [Column(TypeName = "numeric(12,2)")]
     public decimal Price { get; set; }
     public bool IsActive { get; set; } = true;
+    public string? ImageUrl { get; set; }
     public ICollection<BundleItem> Items { get; set; } = [];
 }

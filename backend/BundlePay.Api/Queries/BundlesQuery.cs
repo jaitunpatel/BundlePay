@@ -32,7 +32,8 @@ public sealed class BundlesQuery
                 r.BundleDescription,
                 r.BundlePrice,
                 r.BundleIsActive,
-                r.BundleType
+                r.BundleType,
+                r.BundleImageUrl
             })
             .Select(g =>
             {
@@ -42,7 +43,7 @@ public sealed class BundlesQuery
                     .Select(x => new BundlePlatformDto
                     {
                         Name = x.ServiceName ?? string.Empty,
-                        Logo = null,
+                        Logo = x.ServiceImageUrl,
                         LogoAlt = null
                     })
                     .ToList();
@@ -63,7 +64,7 @@ public sealed class BundlesQuery
                     Platforms = platforms,
                     Features = [],
                     Category = bundleType,
-                    Image = null,
+                    Image = g.Key.BundleImageUrl,
                     ImageAlt = null,
                     Popular = g.Key.BundleIsActive
                 };
@@ -87,11 +88,13 @@ public sealed class BundlesQuery
         public decimal BundlePrice { get; init; }
         public bool BundleIsActive { get; init; }
         public int BundleType { get; init; }
+        public string? BundleImageUrl { get; init; }
         public DateTime BundleCreatedAt { get; init; }
         public int? ItemQuantity { get; init; }
         public int? ItemSortOrder { get; init; }
         public Guid? ServiceId { get; init; }
         public string? ServiceName { get; init; }
         public decimal? ServicePrice { get; init; }
+        public string? ServiceImageUrl { get; init; }
     }
 }

@@ -12,6 +12,7 @@ public class Service : BaseEntity
     
     [Column(TypeName = "numeric(12,2)")]
     public decimal Price { get; set; }
+    public string? ImageUrl { get; set; }
     public ICollection<BundleItem> BundleItems { get; set; } = [];
 }
 
