@@ -78,7 +78,6 @@ public sealed class BundlesQuery
                     Features = [],
                     Category = bundleType,
                     Image = g.Key.BundleImageUrl,
-                    ImageAlt = null,
                     Popular = g.Key.BundleIsActive
                 };
             })

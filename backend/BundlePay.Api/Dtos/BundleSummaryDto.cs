@@ -12,6 +12,5 @@ public sealed class BundleSummaryDto
     public List<string> Features { get; init; } = [];
     public string Category { get; init; } = default!;
     public string? Image { get; init; }
-    public string? ImageAlt { get; init; }
     public bool Popular { get; init; }
 }
