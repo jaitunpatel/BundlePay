@@ -103,16 +103,16 @@ const savingsPercentage =
         <div className="mb-4">
           <div className="flex items-baseline gap-2 mb-1">
             <span className="text-2xl font-data font-bold text-primary">
-              ${bundle.price.toFixed(2)}
+              ${(bundle.price ?? 0).toFixed(2)}
             </span>
             <span className="text-text-secondary">/month</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-text-secondary line-through">
-              ${bundle.originalPrice.toFixed(2)}
+              ${(bundle.originalPrice ?? 0).toFixed(2)}
             </span>
             <span className="text-sm text-success font-medium">
-              Save ${bundle.savings.toFixed(2)}/mo
+              ${(bundle.savings ?? 0).toFixed(2)}
             </span>
           </div>
         </div>

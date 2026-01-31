@@ -12,6 +12,9 @@ type Bundle = {
   id: string;
   name: string;
   description: string;
+  price: number;
+  originalPrice: number;
+  savings: number;
   is_active: boolean;
   created_at: string;
 };
@@ -26,6 +29,9 @@ const initialBundles: Bundle[] = Array.isArray(data)
       id: b.id,
       name: b.name,
       description: b.description,
+      price: b.price,
+      originalPrice: b.originalPrice,
+      savings: b.savings,
       is_active: b.isActive,
       created_at: b.createdAt,
     }))

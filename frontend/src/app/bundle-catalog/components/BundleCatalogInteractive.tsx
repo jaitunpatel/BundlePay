@@ -13,6 +13,9 @@ type ApiBundle = {
   id: string;
   name: string;
   description: string;
+  price: number;
+  originalPrice: number;
+  savings: number;
   is_active: boolean;
   created_at: string;
 };
@@ -29,9 +32,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 29.99,
-    originalPrice: 44.97,
-    savings: 14.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'Netflix', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1dab497e5-1767166214108.png", logoAlt: 'Netflix logo with red N on black background' },
     { name: 'Disney+', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1829e958d-1764662431997.png", logoAlt: 'Disney Plus logo with blue streaming icon' },
@@ -47,9 +50,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 39.99,
-    originalPrice: 59.97,
-    savings: 19.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'ESPN+', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1815c9257-1766933031901.png", logoAlt: 'ESPN Plus logo with red sports icon' },
     { name: 'DAZN', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_13063443a-1765209264479.png", logoAlt: 'DAZN logo with yellow text on black background' },
@@ -65,9 +68,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 24.99,
-    originalPrice: 34.97,
-    savings: 9.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'Disney+', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1829e958d-1764662431997.png", logoAlt: 'Disney Plus logo with blue streaming icon' },
     { name: 'Nickelodeon', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1e7dfdb48-1765285781059.png", logoAlt: 'Nickelodeon logo with orange splat design' },
@@ -82,9 +85,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 34.99,
-    originalPrice: 49.97,
-    savings: 14.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'HBO Max', logo: "https://images.unsplash.com/photo-1678483789104-202dc8f9eb62", logoAlt: 'HBO Max logo with purple gradient design' },
     { name: 'Paramount+', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_128195105-1767992352597.png", logoAlt: 'Paramount Plus logo with mountain peak icon' },
@@ -99,9 +102,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 19.99,
-    originalPrice: 29.97,
-    savings: 9.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'CNN+', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1a4d19642-1767992352315.png", logoAlt: 'CNN Plus logo with red news icon' },
     { name: 'Discovery+', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_164d48efc-1764657498538.png", logoAlt: 'Discovery Plus logo with blue globe design' },
@@ -116,9 +119,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 27.99,
-    originalPrice: 39.97,
-    savings: 11.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'Spotify Premium', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_103538331-1766476082722.png", logoAlt: 'Spotify Premium logo with green circular icon' },
     { name: 'Apple Music', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1e5490539-1764691471621.png", logoAlt: 'Apple Music logo with red musical note' },
@@ -133,9 +136,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 22.99,
-    originalPrice: 32.97,
-    savings: 9.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'Peloton Digital', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1407a4938-1767992350969.png", logoAlt: 'Peloton Digital logo with red P icon' },
     { name: 'Apple Fitness+', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_147c41589-1767992350896.png", logoAlt: 'Apple Fitness Plus logo with activity rings' },
@@ -150,9 +153,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 32.99,
-    originalPrice: 47.97,
-    savings: 14.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'Twitch Turbo', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1be08056f-1767345487728.png", logoAlt: 'Twitch Turbo logo with purple glitch icon' },
     { name: 'YouTube Gaming', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_13f1dc8ca-1766514206811.png", logoAlt: 'YouTube Gaming logo with red controller icon' },
@@ -167,9 +170,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 26.99,
-    originalPrice: 37.97,
-    savings: 10.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'Netflix', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1dab497e5-1767166214108.png", logoAlt: 'Netflix logo with red N on black background' },
     { name: 'Viki', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1823aa15a-1767992352297.png", logoAlt: 'Viki logo with heart icon for Asian content' },
@@ -184,9 +187,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 29.99,
-    originalPrice: 44.97,
-    savings: 14.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'MasterClass', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1e0628770-1767992351962.png", logoAlt: 'MasterClass logo with graduation cap icon' },
     { name: 'Coursera Plus', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_14f242c9c-1766745563246.png", logoAlt: 'Coursera Plus logo with blue book icon' },
@@ -201,9 +204,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 21.99,
-    originalPrice: 31.97,
-    savings: 9.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'Crunchyroll', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1b72158bc-1764922584930.png", logoAlt: 'Crunchyroll logo with orange anime character icon' },
     { name: 'Funimation', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_152960ab2-1765085105922.png", logoAlt: 'Funimation logo with purple streaming icon' },
@@ -218,9 +221,9 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
     id: '',
     name: '',
     description: '',
-    price: 18.99,
-    originalPrice: 26.97,
-    savings: 7.98,
+    price: 0,
+    originalPrice: 0,
+    savings: 0,
     platforms: [
     { name: 'Food Network', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1d118738e-1767114687254.png", logoAlt: 'Food Network logo with chef hat icon' },
     { name: 'Tasty+', logo: "https://img.rocket.new/generatedImages/rocket_gen_img_1331410ca-1767992352270.png", logoAlt: 'Tasty Plus logo with cooking utensils design' },
@@ -242,6 +245,10 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
           id: b.id,
           name: b.name,
           description: b.description,
+
+          price: b.price,
+          originalPrice: b.originalPrice,
+          savings: b.savings,
         };
       })
     : templateBundles;
@@ -259,23 +266,11 @@ const BundleCatalogInteractive = ({ apiBundles }: Props) => {
   const handleFilterChange = (filters: FilterState) => {
     let filtered = [...allBundles];
 
-    if (filters.categories.length > 0) {
-      filtered = filtered.filter((bundle) =>
-      filters.categories.includes(bundle.category.toLowerCase().replace(/\s+/g, '-'))
-      );
-    }
-
     if (filters.platforms.length > 0) {
       filtered = filtered.filter((bundle) =>
       bundle.platforms.some((platform) =>
       filters.platforms.includes(platform.name.toLowerCase().replace(/\s+/g, ''))
       )
-      );
-    }
-
-    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 100) {
-      filtered = filtered.filter(
-        (bundle) => bundle.price >= filters.priceRange[0] && bundle.price <= filters.priceRange[1]
       );
     }
 
