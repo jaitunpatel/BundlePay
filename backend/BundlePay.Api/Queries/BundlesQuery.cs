@@ -53,14 +53,27 @@ public sealed class BundlesQuery
                     ? ((BundleType)g.Key.BundleType).ToString()
                     : "Unknown";
 
+                decimal originalPriceValue;
+                decimal savingsValue;
+                if (bundleType == "Template")
+                {
+                    originalPriceValue = g.Key.BundlePrice;
+                    savingsValue = Math.Max(0, originalPrice - g.Key.BundlePrice);
+                }
+                else
+                {
+                    originalPriceValue = originalPrice;
+                    savingsValue = originalPrice - g.Key.BundlePrice;
+                }
+
                 return new BundleSummaryDto
                 {
                     Id = g.Key.BundleId,
                     Name = g.Key.BundleName,
                     Description = g.Key.BundleDescription,
                     Price = g.Key.BundlePrice,
-                    OriginalPrice = originalPrice,
-                    Savings = originalPrice - g.Key.BundlePrice,
+                    OriginalPrice = originalPriceValue,
+                    Savings = savingsValue,
                     Platforms = platforms,
                     Features = [],
                     Category = bundleType,
