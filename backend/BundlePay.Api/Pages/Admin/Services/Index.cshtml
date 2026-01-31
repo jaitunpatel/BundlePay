@@ -10,6 +10,7 @@
             <th>Name</th>
             <th>Status</th>
             <th>Price</th>
+            <th>Image</th>
             <th>Created</th>
             <th></th>
         </tr>
@@ -21,6 +22,7 @@
             <td>@item.Name</td>
             <td>@item.ServiceStatus</td>
             <td>@item.Price</td>
+            <td>@(string.IsNullOrEmpty(item.ImageUrl) ? "No image" : $"<img src='{item.ImageUrl}' alt='Image' style='max-width: 100px;' />")</td>
             <td>@item.CreatedAt.ToString("u")</td>
             <td class="actions">
                 <a class="link" href="/Admin/Services/Details?id=@item.Id">Details</a>

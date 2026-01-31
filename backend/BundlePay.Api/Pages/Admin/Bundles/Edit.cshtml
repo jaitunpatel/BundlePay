@@ -22,6 +22,10 @@
         <input asp-for="Bundle.Price" />
     </div>
     <div class="form-row">
+        <label asp-for="Bundle.ImageUrl"></label>
+        <input asp-for="Bundle.ImageUrl" />
+    </div>
+    <div class="form-row">
         <label asp-for="Bundle.BundleType"></label>
         <select asp-for="Bundle.BundleType" asp-items="Model.BundleTypes"></select>
     </div>

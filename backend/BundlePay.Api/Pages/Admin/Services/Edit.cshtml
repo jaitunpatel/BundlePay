@@ -18,6 +18,10 @@
         <input asp-for="Service.Price" />
     </div>
     <div class="form-row">
+        <label asp-for="Service.ImageUrl"></label>
+        <input asp-for="Service.ImageUrl" />
+    </div>
+    <div class="form-row">
         <label asp-for="Service.ServiceStatus"></label>
         <select asp-for="Service.ServiceStatus" asp-items="Model.Statuses"></select>
     </div>

@@ -10,6 +10,7 @@
             <th>Name</th>
             <th>Type</th>
             <th>Price</th>
+            <th>Image</th>
             <th>Active</th>
             <th>Created</th>
             <th></th>
@@ -22,6 +23,7 @@
             <td>@item.Name</td>
             <td>@item.BundleType</td>
             <td>@item.Price</td>
+            <td>@(string.IsNullOrEmpty(item.ImageUrl) ? "No image" : $"<img src='{item.ImageUrl}' alt='Image' style='max-width: 100px;' />")</td>
             <td>@item.IsActive</td>
             <td>@item.CreatedAt.ToString("u")</td>
             <td class="actions">
