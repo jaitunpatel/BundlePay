@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
-
+using Resend;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,9 +29,9 @@ builder.Services
         {
             ValidateIssuer = true,
             ValidIssuer = $"{supabaseUrl}/auth/v1",
-            ValidateAudience = false,      
+            ValidateAudience = false,
             ValidateLifetime = true,
-            NameClaimType = "sub"  
+            NameClaimType = "sub"
         };
     });
 
@@ -40,9 +40,30 @@ builder.Services.AddControllers();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddAuthorization();
+builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// CORS (Dev only - allows FE at localhost:4028 to call BE at localhost:5192)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevCors", policy =>
+        policy.WithOrigins("http://localhost:4028")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+    );
+});
+
+// Resend (email sender)
+builder.Services.AddOptions();
+builder.Services.AddHttpClient<ResendClient>();
+builder.Services.Configure<ResendClientOptions>(o =>
+{
+    o.ApiToken = builder.Configuration["Resend:ApiKey"]!;
+});
+builder.Services.AddTransient<IResend, ResendClient>();
+
 var cs = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseNpgsql(cs));
@@ -56,18 +77,18 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    builder.Configuration.AddUserSecrets<Program>();
 }
+app.UseCors("DevCors");
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHttpsRedirection();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.MapControllers();
 app.MapRazorPages();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
