@@ -9,6 +9,7 @@ public class Service : BaseEntity
     [Required, MaxLength(140)]
     public string Name { get; set; } = default!;
     public ServiceStatus ServiceStatus { get; set; } = ServiceStatus.Active;
+    public ServiceCategory ServiceCategory { get; set; }
     
     [Column(TypeName = "numeric(12,2)")]
     public decimal Price { get; set; }
