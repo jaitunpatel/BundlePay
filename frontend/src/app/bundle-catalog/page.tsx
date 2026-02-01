@@ -8,12 +8,22 @@ export const metadata: Metadata = {
     'Discover and compare OTT platform bundles with comprehensive filtering and search capabilities. Find the perfect streaming bundle for your entertainment needs.',
 };
 
+type Platform = {
+  name: string;
+  logo: string | null;
+  logoAlt: string | null;
+};
+
 type Bundle = {
   id: string;
   name: string;
   description: string;
+  bundlePrice: number;
+  totalPlatformsPrice: number;
+  savings: number;
   is_active: boolean;
   created_at: string;
+  platforms: Platform[];
 };
 
 export default async function BundleCatalogPage() {
@@ -26,6 +36,10 @@ const initialBundles: Bundle[] = Array.isArray(data)
       id: b.id,
       name: b.name,
       description: b.description,
+      bundlePrice: b.bundlePrice,
+      totalPlatformsPrice: b.totalPlatformsPrice,
+      savings: b.savings,
+      platforms: b.platforms ?? [],
       is_active: b.isActive,
       created_at: b.createdAt,
     }))
