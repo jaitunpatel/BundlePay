@@ -121,6 +121,25 @@ const FilterPanel = ({ onFilterChange, totalResults }: FilterPanelProps) => {
           ))}
         </div>
       </div>
+
+      {/* Divider line */}
+      <div className="h-px bg-border" />
+
+      {/* Sort By (moved into the same card) */}
+      <div className="flex items-center gap-3 mt-6 mb-6">
+        <Icon name="BarsArrowDownIcon" size={20} variant="outline" className="text-text-secondary" />
+        <select
+          value={filters.sortBy}
+          onChange={(e) => handleSortChange(e.target.value)}
+          className="flex-1 lg:flex-none px-4 py-2 bg-card border border-border rounded-md text-text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background transition-smooth"
+        >
+          {sortOptions.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 
@@ -129,7 +148,7 @@ const FilterPanel = ({ onFilterChange, totalResults }: FilterPanelProps) => {
       {/* Desktop Filter Panel */}
       <div className="hidden lg:block bg-card rounded-lg p-6 shadow-cinematic">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-heading font-semibold text-text-primary">Filters</h2>
+          <h4 className="text-lg font-heading font-semibold text-text-primary">Filters</h4>
           {activeFilterCount > 0 && (
             <button
               onClick={clearAllFilters}
@@ -160,22 +179,6 @@ const FilterPanel = ({ onFilterChange, totalResults }: FilterPanelProps) => {
         <div className="flex items-center gap-2">
           <span className="text-sm text-text-secondary">{totalResults} results</span>
         </div>
-      </div>
-
-      {/* Sort Controls - Always Visible */}
-      <div className="flex items-center gap-3 mt-6 mb-6">
-        <Icon name="BarsArrowDownIcon" size={20} variant="outline" className="text-text-secondary" />
-        <select
-          value={filters.sortBy}
-          onChange={(e) => handleSortChange(e.target.value)}
-          className="flex-1 lg:flex-none px-4 py-2 bg-card border border-border rounded-md text-text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background transition-smooth"
-        >
-          {sortOptions.map(option => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
       </div>
 
       {/* Mobile Filter Slide-out */}

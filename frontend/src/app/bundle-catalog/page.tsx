@@ -26,29 +26,57 @@ type Bundle = {
   platforms: Platform[];
 };
 
+type Service = {
+  id: string;
+  name: string;
+  serviceStatus: number;
+  serviceCategory: number;
+  price: number;
+  imageUrl: string | null;
+};
+
 export default async function BundleCatalogPage() {
-  const res = await fetch('http://localhost:5192/api/bundles', { cache: 'no-store' });
+  // Fetch both in parallel (same "standard" style)
+  const [bundlesRes, servicesRes] = await Promise.all([
+    fetch('http://localhost:5192/api/bundles', { cache: 'no-store' }),
+    fetch('http://localhost:5192/api/services', { cache: 'no-store' }),
+  ]);
 
-const data = res.ok ? await res.json() : [];
+  const bundlesData = bundlesRes.ok ? await bundlesRes.json() : [];
+  const servicesData = servicesRes.ok ? await servicesRes.json() : [];
 
-const initialBundles: Bundle[] = Array.isArray(data)
-  ? data.map((b: any) => ({
-      id: b.id,
-      name: b.name,
-      description: b.description,
-      bundlePrice: b.bundlePrice,
-      totalPlatformsPrice: b.totalPlatformsPrice,
-      savings: b.savings,
-      platforms: b.platforms ?? [],
-      is_active: b.isActive,
-      created_at: b.createdAt,
-    }))
-  : [];
+  const initialBundles: Bundle[] = Array.isArray(bundlesData)
+    ? bundlesData.map((b: any) => ({
+        id: b.id,
+        name: b.name,
+        description: b.description,
+        bundlePrice: b.bundlePrice,
+        totalPlatformsPrice: b.totalPlatformsPrice,
+        savings: b.savings,
+        platforms: b.platforms ?? [],
+        is_active: b.isActive,
+        created_at: b.createdAt,
+      }))
+    : [];
+
+  const initialServices: Service[] = Array.isArray(servicesData)
+    ? servicesData.map((s: any) => ({
+        id: s.id,
+        name: s.name,
+        serviceStatus: s.serviceStatus,
+        serviceCategory: s.serviceCategory,
+        price: s.price,
+        imageUrl: s.imageUrl ?? null,
+      }))
+    : [];
 
   return (
     <main className="min-h-screen bg-background">
       <Header />
-      <BundleCatalogInteractive apiBundles={initialBundles} />
+      <BundleCatalogInteractive
+        apiBundles={initialBundles}
+        apiServices={initialServices}
+      />
     </main>
   );
 }
