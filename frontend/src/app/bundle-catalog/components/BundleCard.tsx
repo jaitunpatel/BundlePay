@@ -15,7 +15,6 @@ export interface Bundle {
   savings: number;
   platforms: Platform[];
   features: string[];
-  rating: number;
   reviewCount: number;
   category: string;
   popular?: boolean;
