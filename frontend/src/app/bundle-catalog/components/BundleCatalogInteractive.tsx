@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import { WAITLIST_MODE } from "@/lib/flag";
+import { AuthenticationError } from "@/lib/cartApi";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { useCart } from "@/components/cart/CartProvider";
 import BundleGrid from './BundleGrid';
 import { Bundle } from './BundleCard';
 import BuildYourOwnGrid from './BuildYourOwnGrid';
@@ -47,12 +50,15 @@ type Props = {
 
 const BundleCatalogInteractive = ({ apiBundles, apiServices }: Props) => {
   const router = useRouter();
+  const { loading, userEmail } = useAuth();
+  const { addToCart, cartItems } = useCart();
   const [isHydrated, setIsHydrated] = useState(false);
   const [activeTab, setActiveTab] = useState<'premade' | 'custom'>('premade');
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [comparisonIds, setComparisonIds] = useState<string[]>([]);
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
-  const [cartNotification, setCartNotification] = useState<string | null>(null);
+  const [cartNotification, setCartNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [isAddingToCart, setIsAddingToCart] = useState<string | null>(null);
 
   const [selectedServiceCategory, setSelectedServiceCategory] = useState<number | null>(null);
 
@@ -117,15 +123,46 @@ const BundleCatalogInteractive = ({ apiBundles, apiServices }: Props) => {
       setIsHydrated(true);
     }, []);
 
-  const handleAddToCart = (bundleId: string) => {
+  const handleAddToCart = async (bundleId: string) => {
     if (WAITLIST_MODE) {
       router.push("/waitlist?from=/bundle-catalog");
       return;
     }
+
+    // Check if user is authenticated
+    if (!userEmail) {
+      router.push("/sign-in?from=/bundle-catalog");
+      return;
+    }
+
+    setIsAddingToCart(bundleId);
     const bundle = allBundles.find((b) => b.id === bundleId);
-    if (bundle) {
-      setCartNotification(`${bundle.name} added to cart!`);
+    
+    try {
+      await addToCart(bundleId);
+      setCartNotification({
+        message: `${bundle?.name} added to cart!`,
+        type: 'success',
+      });
       setTimeout(() => setCartNotification(null), 3000);
+    } catch (error) {
+      let errorMessage = 'Failed to add to cart';
+      
+      if (error instanceof AuthenticationError) {
+        // Redirect to sign-in if authentication fails
+        router.push("/sign-in?from=/bundle-catalog");
+        return;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      setCartNotification({
+        message: errorMessage,
+        type: 'error',
+      });
+      setTimeout(() => setCartNotification(null), 3000);
+    } finally {
+      setIsAddingToCart(null);
     }
   };
 
@@ -266,6 +303,7 @@ const BundleCatalogInteractive = ({ apiBundles, apiServices }: Props) => {
               onToggleCompare={handleToggleCompare}
               wishlistIds={wishlistIds}
               comparisonIds={comparisonIds}
+              cartIds={cartItems.map(item => item.bundleId)}
             />
           </div>
         )}
@@ -287,9 +325,17 @@ const BundleCatalogInteractive = ({ apiBundles, apiServices }: Props) => {
 
       {/* Cart Notification */}
       {cartNotification &&
-      <div className="fixed bottom-6 right-6 z-140 bg-success text-success-foreground px-6 py-4 rounded-lg shadow-cinematic-lg flex items-center gap-3 animate-slide-up">
-          <Icon name="CheckCircleIcon" size={24} variant="solid" />
-          <span className="font-medium">{cartNotification}</span>
+      <div className={`fixed bottom-6 right-6 z-140 px-6 py-4 rounded-lg shadow-cinematic-lg flex items-center gap-3 animate-slide-up ${
+        cartNotification.type === 'success'
+          ? 'bg-success text-success-foreground'
+          : 'bg-error text-error-foreground'
+      }`}>
+          <Icon 
+            name={cartNotification.type === 'success' ? "CheckCircleIcon" : "ExclamationCircleIcon"} 
+            size={24} 
+            variant="solid" 
+          />
+          <span className="font-medium">{cartNotification.message}</span>
         </div>
       }
 

@@ -1,6 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { AuthenticationError } from '@/lib/cartApi';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { useCart } from '@/components/cart/CartProvider';
 import Icon from '@/components/ui/AppIcon';
 import AppImage from '@/components/ui/AppImage';
 import Link from 'next/link';
@@ -24,8 +28,13 @@ interface Bundle {
 }
 
 const FeaturedBundlesCarousel = () => {
+  const router = useRouter();
+  const { userEmail } = useAuth();
+  const { addToCart, cartItems } = useCart();
   const [isHydrated, setIsHydrated] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [addingToCartId, setAddingToCartId] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error'; bundleId: string } | null>(null);
 
   useEffect(() => {
     setIsHydrated(true);
@@ -161,6 +170,44 @@ const FeaturedBundlesCarousel = () => {
     setCurrentSlide(index);
   };
 
+  const handleAddToCart = async (bundleId: string, bundleName: string) => {
+    // Check if user is authenticated
+    if (!userEmail) {
+      router.push(`/sign-in?from=/`);
+      return;
+    }
+
+    setAddingToCartId(bundleId);
+    try {
+      await addToCart(bundleId);
+      setNotification({
+        message: `${bundleName} added to cart!`,
+        type: 'success',
+        bundleId,
+      });
+      setTimeout(() => setNotification(null), 3000);
+    } catch (error) {
+      let errorMessage = 'Failed to add to cart';
+      
+      if (error instanceof AuthenticationError) {
+        // Redirect to sign-in if authentication fails
+        router.push(`/sign-in?from=/`);
+        return;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      setNotification({
+        message: errorMessage,
+        type: 'error',
+        bundleId,
+      });
+      setTimeout(() => setNotification(null), 3000);
+    } finally {
+      setAddingToCartId(null);
+    }
+  };
+
   useEffect(() => {
     if (!isHydrated) return;
 
@@ -265,8 +312,20 @@ const FeaturedBundlesCarousel = () => {
 
                               View Details
                             </Link>
-                            <button className="flex-1 py-3 px-6 bg-muted text-text-primary text-center font-medium rounded-md hover:bg-input transition-smooth">
-                              Add to Cart
+                            <button 
+                              onClick={() => handleAddToCart(bundle.id, bundle.name)}
+                              disabled={addingToCartId === bundle.id || cartItems.some(item => item.bundleId === bundle.id)}
+                              className={`flex-1 py-3 px-6 text-center font-medium rounded-md transition-smooth flex items-center justify-center gap-2 ${
+                                cartItems.some(item => item.bundleId === bundle.id)
+                                  ? 'bg-success text-success-foreground cursor-default'
+                                  : 'bg-muted text-text-primary hover:bg-input'
+                              }`}>
+                              <Icon
+                                name={cartItems.some(item => item.bundleId === bundle.id) ? "CheckIcon" : "ShoppingCartIcon"}
+                                size={18}
+                                variant="outline"
+                              />
+                              <span>{cartItems.some(item => item.bundleId === bundle.id) ? 'Added to Cart' : addingToCartId === bundle.id ? 'Adding...' : 'Add to Cart'}</span>
                             </button>
                           </div>
                         </div>

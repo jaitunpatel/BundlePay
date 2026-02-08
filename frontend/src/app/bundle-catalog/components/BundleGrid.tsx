@@ -11,6 +11,7 @@ interface BundleGridProps {
   onToggleCompare: (bundleId: string) => void;
   wishlistIds: string[];
   comparisonIds: string[];
+  cartIds: string[];
 }
 
 const BundleGrid = ({
@@ -20,6 +21,7 @@ const BundleGrid = ({
   onToggleCompare,
   wishlistIds,
   comparisonIds,
+  cartIds,
 }: BundleGridProps) => {
   const [displayedBundles, setDisplayedBundles] = useState<Bundle[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,6 +73,7 @@ const BundleGrid = ({
             onToggleCompare={onToggleCompare}
             isInWishlist={wishlistIds.includes(bundle.id)}
             isInComparison={comparisonIds.includes(bundle.id)}
+            isInCart={cartIds.includes(bundle.id)}
           />
         ))}
       </div>

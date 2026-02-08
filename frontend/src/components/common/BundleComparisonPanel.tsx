@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { AuthenticationError } from '@/lib/cartApi';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { useCart } from '@/components/cart/CartProvider';
 import Icon from '@/components/ui/AppIcon';
 import Link from 'next/link';
 
@@ -24,6 +28,9 @@ const BundleComparisonPanel = ({
   onClose = () => {}, 
   className = '' 
 }: BundleComparisonPanelProps) => {
+  const router = useRouter();
+  const { userEmail } = useAuth();
+  const { addToCart } = useCart();
   const [comparisonBundles, setComparisonBundles] = useState<ComparisonBundle[]>([
     {
       id: '1',
@@ -42,6 +49,8 @@ const BundleComparisonPanel = ({
       savings: 20.00,
     },
   ]);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const removeBundle = (id: string) => {
     setComparisonBundles(comparisonBundles.filter(bundle => bundle.id !== id));
@@ -53,6 +62,66 @@ const BundleComparisonPanel = ({
   const clearAll = () => {
     setComparisonBundles([]);
     onClose();
+  };
+
+  const handleAddAllToCart = async () => {
+    // Check if user is authenticated
+    if (!userEmail) {
+      router.push(`/sign-in?from=/bundle-catalog`);
+      return;
+    }
+
+    setIsAddingToCart(true);
+    try {
+      // Add all bundles to cart
+      const results = await Promise.allSettled(
+        comparisonBundles.map(bundle => addToCart(bundle.id))
+      );
+      
+      const successful = results.filter(r => r.status === 'fulfilled').length;
+      const failed = results.filter(r => r.status === 'rejected').length;
+
+      if (failed === 0) {
+        setNotification({
+          message: `${successful} bundle${successful > 1 ? 's' : ''} added to cart!`,
+          type: 'success',
+        });
+      } else if (successful === 0) {
+        setNotification({
+          message: 'Failed to add bundles to cart',
+          type: 'error',
+        });
+      } else {
+        setNotification({
+          message: `${successful} added, ${failed} failed`,
+          type: 'error',
+        });
+      }
+      
+      setTimeout(() => {
+        setNotification(null);
+        onClose();
+      }, 2000);
+    } catch (error) {
+      let errorMessage = 'Failed to add bundles to cart';
+      
+      if (error instanceof AuthenticationError) {
+        // Redirect to sign-in if authentication fails
+        router.push(`/sign-in?from=/bundle-catalog`);
+        return;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      console.error('Error adding bundles to cart:', error);
+      setNotification({
+        message: errorMessage,
+        type: 'error',
+      });
+      setTimeout(() => setNotification(null), 3000);
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   if (!isOpen || comparisonBundles.length === 0) {
@@ -161,6 +230,20 @@ const BundleComparisonPanel = ({
 
           {/* Footer Actions */}
           <div className="p-6 border-t border-border bg-muted">
+            {notification && (
+              <div className={`mb-4 p-4 rounded-md flex items-center gap-2 ${
+                notification.type === 'success'
+                  ? 'bg-success/10 text-success-foreground'
+                  : 'bg-error/10 text-error-foreground'
+              }`}>
+                <Icon 
+                  name={notification.type === 'success' ? 'CheckCircleIcon' : 'ExclamationCircleIcon'} 
+                  size={20} 
+                  variant="solid" 
+                />
+                <span className="font-medium">{notification.message}</span>
+              </div>
+            )}
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={onClose}
@@ -168,12 +251,13 @@ const BundleComparisonPanel = ({
               >
                 Continue Browsing
               </button>
-              <Link
-                href="/checkout-payment"
-                className="flex-1 py-3 px-4 bg-primary text-primary-foreground text-center font-medium rounded-md hover:shadow-glow-primary transition-smooth"
+              <button
+                onClick={handleAddAllToCart}
+                disabled={isAddingToCart}
+                className="flex-1 py-3 px-4 bg-primary text-primary-foreground text-center font-medium rounded-md hover:shadow-glow-primary transition-smooth disabled:opacity-50"
               >
-                Add to Cart
-              </Link>
+                {isAddingToCart ? 'Adding to Cart...' : 'Add All to Cart'}
+              </button>
             </div>
           </div>
         </div>

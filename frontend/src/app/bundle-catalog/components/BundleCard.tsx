@@ -33,6 +33,7 @@ interface BundleCardProps {
   onToggleCompare: (bundleId: string) => void;
   isInWishlist: boolean;
   isInComparison: boolean;
+  isInCart: boolean;
 }
 
 const BundleCard = ({
@@ -42,6 +43,7 @@ const BundleCard = ({
   onToggleCompare,
   isInWishlist,
   isInComparison,
+  isInCart,
 }: BundleCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -60,12 +62,18 @@ const savingsPercentage =
         </div>
 
         {/* Badges */}
-        <div className="absolute top-3 right-3 z-10">
-          {savingsPercentage > 0 ? (
+        <div className="absolute top-3 right-3 z-10 flex flex-col gap-2 items-end">
+          {isInCart && (
+            <span className="px-3 py-1 bg-success text-success-foreground text-xs font-bold rounded-full shadow-depth flex items-center gap-1">
+              <Icon name="CheckCircleIcon" size={14} variant="solid" />
+              In Cart
+            </span>
+          )}
+          {!isInCart && savingsPercentage > 0 ? (
             <span className="px-3 py-1 bg-success text-success-foreground text-xs font-bold rounded-full shadow-depth">
               SAVE {savingsPercentage}%
             </span>
-          ) : bundle.popular ? (
+          ) : !isInCart && bundle.popular ? (
             <span className="px-3 py-1 bg-accent text-accent-foreground text-xs font-bold rounded-full shadow-depth">
               POPULAR
             </span>
@@ -145,14 +153,19 @@ const savingsPercentage =
         <div className="flex gap-2">
           <button
             onClick={() => onAddToCart(bundle.id)}
-            className="flex-1 py-2.5 px-4 bg-primary text-primary-foreground font-medium rounded-md hover:shadow-glow-primary transition-smooth flex items-center justify-center gap-2"
+            disabled={isInCart}
+            className={`flex-1 py-2.5 px-4 font-medium rounded-md flex items-center justify-center gap-2 transition-smooth ${
+              isInCart
+                ? 'bg-success text-success-foreground cursor-default opacity-90'
+                : 'bg-primary text-primary-foreground hover:shadow-glow-primary'
+            }`}
           >
             <Icon
-              name={WAITLIST_MODE ? "LockClosedIcon" : "ShoppingCartIcon"}
+              name={isInCart ? "CheckIcon" : WAITLIST_MODE ? "LockClosedIcon" : "ShoppingCartIcon"}
               size={18}
               variant="outline"
             />
-            <span>{WAITLIST_MODE ? "Join Waitlist" : "Add to Cart"}</span>
+            <span>{isInCart ? "Added to Cart" : WAITLIST_MODE ? "Join Waitlist" : "Add to Cart"}</span>
           </button>
           <Link
             href={`/bundle-details?id=${bundle.id}`}

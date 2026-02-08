@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { AuthenticationError } from '@/lib/cartApi';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { useCart } from '@/components/cart/CartProvider';
 import BundleHero from './BundleHero';
 import PlatformShowcase from './PlatformShowcase';
 import BundleContent from './BundleContent';
@@ -76,12 +80,47 @@ interface BundleDetailsInteractiveProps {
 }
 
 const BundleDetailsInteractive = ({ bundleData }: BundleDetailsInteractiveProps) => {
+  const router = useRouter();
+  const { userEmail } = useAuth();
+  const { addToCart } = useCart();
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
-  const [showAddedNotification, setShowAddedNotification] = useState(false);
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
-  const handleAddToCart = () => {
-    setShowAddedNotification(true);
-    setTimeout(() => setShowAddedNotification(false), 3000);
+  const handleAddToCart = async () => {
+    // Check if user is authenticated
+    if (!userEmail) {
+      router.push(`/sign-in?from=/bundle-details?id=${bundleData.id}`);
+      return;
+    }
+
+    setIsAddingToCart(true);
+    try {
+      await addToCart(bundleData.id);
+      setNotification({
+        message: 'Bundle added to cart!',
+        type: 'success',
+      });
+      setTimeout(() => setNotification(null), 3000);
+    } catch (error) {
+      let errorMessage = 'Failed to add to cart';
+      
+      if (error instanceof AuthenticationError) {
+        // Redirect to sign-in if authentication fails
+        router.push(`/sign-in?from=/bundle-details?id=${bundleData.id}`);
+        return;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      setNotification({
+        message: errorMessage,
+        type: 'error',
+      });
+      setTimeout(() => setNotification(null), 3000);
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   const handleCompare = () => {
@@ -140,10 +179,14 @@ const BundleDetailsInteractive = ({ bundleData }: BundleDetailsInteractiveProps)
 
   return (
     <>
-      {showAddedNotification && (
-        <div className="fixed top-20 right-4 z-100 bg-success text-success-foreground px-6 py-3 rounded-lg shadow-cinematic-lg animate-slide-in-right">
+      {notification && (
+        <div className={`fixed top-20 right-4 z-100 px-6 py-3 rounded-lg shadow-cinematic-lg animate-slide-in-right ${
+          notification.type === 'success'
+            ? 'bg-success text-success-foreground'
+            : 'bg-error text-error-foreground'
+        }`}>
           <div className="flex items-center gap-2">
-            <span className="font-medium">Bundle added to cart!</span>
+            <span className="font-medium">{notification.message}</span>
           </div>
         </div>
       )}

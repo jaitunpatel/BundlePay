@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import Script from "next/script";
 import { AuthProvider } from '@/components/auth/AuthProvider';
+import { CartProvider } from '@/components/cart/CartProvider';
 import '../styles/index.css';
 
 export const metadata: Metadata = {
@@ -23,7 +24,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthProvider>
-          {children}
+          <CartProvider>
+            {children}
+          </CartProvider>
         </AuthProvider>
 
         <Script
