@@ -28,7 +28,7 @@ interface Platform {
 
 interface BundleCardProps {
   bundle: Bundle;
-  onAddToCart: (bundleId: string) => void;
+  onAddToCart: (bundle: Bundle) => void;
   onToggleWishlist: (bundleId: string) => void;
   onToggleCompare: (bundleId: string) => void;
   isInWishlist: boolean;
@@ -152,21 +152,20 @@ const savingsPercentage =
         {/* Action Buttons */}
         <div className="flex gap-2">
           <button
-            onClick={() => onAddToCart(bundle.id)}
-            disabled={isInCart}
-            className={`flex-1 py-2.5 px-4 font-medium rounded-md flex items-center justify-center gap-2 transition-smooth ${
-              isInCart
-                ? 'bg-success text-success-foreground cursor-default opacity-90'
-                : 'bg-primary text-primary-foreground hover:shadow-glow-primary'
-            }`}
+            onClick={() => {
+              if (WAITLIST_MODE) return;
+              onAddToCart(bundle);
+            }}
+            className="flex-1 py-2.5 px-4 bg-primary text-primary-foreground font-medium rounded-md flex items-center justify-center gap-2 transition-smooth"
           >
             <Icon
-              name={isInCart ? "CheckIcon" : WAITLIST_MODE ? "LockClosedIcon" : "ShoppingCartIcon"}
+              name={WAITLIST_MODE ? 'LockClosedIcon' : 'ShoppingCartIcon'}
               size={18}
               variant="outline"
             />
-            <span>{isInCart ? "Added to Cart" : WAITLIST_MODE ? "Join Waitlist" : "Add to Cart"}</span>
+            <span>{WAITLIST_MODE ? 'Join Waitlist' : 'Add to Cart'}</span>
           </button>
+
           <Link
             href={`/bundle-details?id=${bundle.id}`}
             className="py-2.5 px-4 bg-muted text-text-primary font-medium rounded-md hover:bg-muted/80 transition-smooth flex items-center justify-center"

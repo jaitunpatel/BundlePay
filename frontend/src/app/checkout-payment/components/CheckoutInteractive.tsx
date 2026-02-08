@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Icon from '@/components/ui/AppIcon';
 import OrderSummary from './OrderSummary';
 import PaymentMethodTabs from './PaymentMethodTabs';
+import { useCart } from '../../../components/common/CartProvider';
 import CreditCardForm from './CreditCardForm';
 import DigitalWalletForm from './DigitalWalletForm';
 import BankTransferForm from './BankTransferForm';
@@ -30,15 +31,11 @@ const CheckoutInteractive = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const [cartItems, setCartItems] = useState<BundleItem[]>([
-    {
-      id: '1',
-      name: 'Entertainment Plus Bundle',
-      price: 29.99,
-      platforms: ['Netflix', 'Disney+', 'Hulu'],
-      billingCycle: 'monthly',
-    },
-  ]);
+  const { cartItems, removeFromCart } = useCart();
+  const summaryItems: BundleItem[] = cartItems.map((x) => ({
+    ...x,
+    billingCycle: 'monthly',
+  }));
 
   useEffect(() => {
     setIsHydrated(true);
@@ -62,8 +59,10 @@ const CheckoutInteractive = () => {
   }
 
   const handleRemoveItem = (id: string) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-    if (cartItems.length <= 1) {
+    const willBeEmpty = cartItems.length <= 1;
+    removeFromCart(id);
+
+    if (willBeEmpty) {
       router.push('/bundle-catalog');
     }
   };
@@ -146,11 +145,10 @@ const CheckoutInteractive = () => {
 
           <div className="space-y-6">
             <OrderSummary
-              items={cartItems}
+              items={summaryItems}
               onRemoveItem={handleRemoveItem}
               onModify={handleModifyOrder}
             />
-
             <button
               onClick={handleProcessPayment}
               disabled={!isFormValid || isProcessing}

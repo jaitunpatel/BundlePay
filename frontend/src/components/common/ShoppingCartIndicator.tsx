@@ -1,111 +1,78 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { WAITLIST_MODE } from "@/lib/flag";
-import { useCart } from '@/components/cart/CartProvider';
-import Icon from '@/components/ui/AppIcon';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+
+import { WAITLIST_MODE } from '@/lib/flag';
+import Icon from '@/components/ui/AppIcon';
+import { useCart } from '@/components/cart/CartProvider';
 
 interface ShoppingCartIndicatorProps {
   className?: string;
 }
 
-const ShoppingCartIndicator = ({ className = '' }: ShoppingCartIndicatorProps) => {
+export default function ShoppingCartIndicator({
+  className = '',
+}: ShoppingCartIndicatorProps) {
   if (WAITLIST_MODE) return null;
 
   const [isOpen, setIsOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
+
   const { cartItems, cartCount, removeFromCart } = useCart();
 
   useEffect(() => {
     setIsHydrated(true);
   }, []);
 
-  const toggleCart = () => {
-    setIsOpen(!isOpen);
-  };
+  if (!isHydrated || cartCount === 0) return null;
 
   return (
     <div className={`relative ${className}`}>
       <button
-        onClick={toggleCart}
-        className="relative p-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-muted transition-smooth"
-        aria-label={`Shopping cart with ${cartCount} items`}
+        onClick={() => setIsOpen((v) => !v)}
+        className="relative flex items-center justify-center rounded-md p-2 hover:bg-muted"
+        aria-label="Open cart"
       >
-        <Icon name="ShoppingCartIcon" size={24} variant="outline" />
-        {isHydrated && cartCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold bg-accent text-accent-foreground rounded-full">
-            {cartCount}
-          </span>
-        )}
+        <Icon name="ShoppingCartIcon" size={20} />
+        <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+          {cartCount}
+        </span>
       </button>
 
-      {isOpen && isHydrated && (
-        <>
-          <div
-            className="fixed inset-0 z-110"
-            onClick={toggleCart}
-            aria-hidden="true"
-          />
-          <div className="absolute right-0 mt-2 w-80 bg-popover rounded-md shadow-cinematic-lg z-120 overflow-hidden">
-            <div className="p-4 border-b border-border">
-              <h3 className="text-lg font-heading font-semibold text-text-primary">
-                Shopping Cart
-              </h3>
-            </div>
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-80 rounded-md border bg-background shadow-lg z-50">
+          <div className="p-4">
+            <h4 className="mb-2 font-medium">Your Cart</h4>
 
-            {cartItems.length === 0 ? (
-              <div className="p-6 text-center">
-                <Icon name="ShoppingCartIcon" size={48} variant="outline" className="mx-auto mb-3 text-muted-foreground" />
-                <p className="text-text-secondary">Your cart is empty</p>
-              </div>
-            ) : (
-              <>
-                <div className="max-h-64 overflow-y-auto">
-                  {cartItems.map((item) => {
-                    const bundleName = item.bundle?.name || 'Bundle';
-                    const bundlePrice = item.bundle?.bundlePrice || 0;
-                    
-                    return (
-                      <div key={item.id} className="p-4 border-b border-border hover:bg-muted transition-smooth">
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-medium text-text-primary">{bundleName}</h4>
-                          <button
-                            onClick={() => removeFromCart(item.bundleId)}
-                            className="text-text-secondary hover:text-error transition-smooth"
-                            aria-label="Remove item"
-                          >
-                            <Icon name="XMarkIcon" size={18} variant="outline" />
-                          </button>
-                        </div>
-                        <p className="font-data text-primary font-medium">${bundlePrice.toFixed(2)}/mo</p>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div className="p-4 bg-muted">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-text-secondary">Total ({cartCount} bundles)</span>
-                    <span className="text-xl font-data font-semibold text-text-primary">
-                      ${cartItems.reduce((sum, item) => sum + (item.bundle?.bundlePrice || 0), 0).toFixed(2)}/mo
-                    </span>
-                  </div>
-                  <Link
-                    href="/checkout-payment"
-                    onClick={toggleCart}
-                    className="block w-full py-3 px-4 bg-primary text-primary-foreground text-center font-medium rounded-md hover:shadow-glow-primary transition-smooth"
+            <ul className="space-y-2">
+              {cartItems.map((item) => (
+                <li
+                  key={item.id}
+                  className="flex items-center justify-between gap-2"
+                >
+                  <span className="text-sm">{item.name}</span>
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="text-xs text-destructive hover:underline"
+                    aria-label="Remove item"
                   >
-                    Proceed to Checkout
-                  </Link>
-                </div>
-              </>
-            )}
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <Link
+              href="/checkout"
+              className="mt-4 block w-full rounded-md bg-primary py-2 text-center text-sm font-medium text-primary-foreground"
+              onClick={() => setIsOpen(false)}
+            >
+              Go to Checkout
+            </Link>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
-};
-
-export default ShoppingCartIndicator;
+}

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import BundleCard, { Bundle } from './BundleCard';
 import Icon from '@/components/ui/AppIcon';
+import { useCart } from '@/components/common/CartProvider';
 
 interface BundleGridProps {
   bundles: Bundle[];
@@ -27,6 +28,8 @@ const BundleGrid = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const itemsPerPage = 12;
+
+  const { addToCart } = useCart();
 
   useEffect(() => {
     setDisplayedBundles(bundles.slice(0, itemsPerPage));
@@ -68,7 +71,14 @@ const BundleGrid = ({
           <BundleCard
             key={bundle.id}
             bundle={bundle}
-            onAddToCart={onAddToCart}
+              onAddToCart={(bundle) => {
+                addToCart({
+                  id: bundle.id,
+                  name: bundle.name,
+                  price: bundle.bundlePrice,
+                  platforms: bundle.platforms.map(p => p.name),
+                });
+              }}
             onToggleWishlist={onToggleWishlist}
             onToggleCompare={onToggleCompare}
             isInWishlist={wishlistIds.includes(bundle.id)}
