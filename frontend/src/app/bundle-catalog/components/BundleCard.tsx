@@ -10,12 +10,11 @@ export interface Bundle {
   id: string;
   name: string;
   description: string;
-  price: number;
-  originalPrice: number;
+  bundlePrice: number;
+  totalPlatformsPrice: number;
   savings: number;
   platforms: Platform[];
   features: string[];
-  rating: number;
   reviewCount: number;
   category: string;
   popular?: boolean;
@@ -23,8 +22,8 @@ export interface Bundle {
 
 interface Platform {
   name: string;
-  logo: string;
-  logoAlt: string;
+  logo: string | null;
+  logoAlt: string | null;
 }
 
 interface BundleCardProps {
@@ -47,7 +46,7 @@ const BundleCard = ({
   const [isExpanded, setIsExpanded] = useState(false);
 
 const savingsPercentage =
-  bundle.originalPrice > 0 ? Math.round((bundle.savings / bundle.originalPrice) * 100) : 0;
+  bundle.totalPlatformsPrice > 0 ? Math.round((bundle.savings / bundle.totalPlatformsPrice) * 100) : 0;
 
   return (
     <div className="relative bg-card rounded-lg overflow-hidden shadow-cinematic hover:shadow-cinematic-lg transition-smooth group">
@@ -83,7 +82,17 @@ const savingsPercentage =
           {bundle.platforms.slice(0, 3).map((platform) => (
             <div key={platform.name} className="flex flex-col items-center gap-1" title={platform.name}>
               <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden border border-border/40">
-                <AppImage src={platform.logo} alt={platform.logoAlt} className="w-11 h-11 object-contain" />
+                {platform.logo ? (
+                  <AppImage
+                    src={platform.logo}
+                    alt={platform.logoAlt ?? platform.name}
+                    className="w-11 h-11 object-contain"
+                  />
+                ) : (
+                  <span className="text-[10px] text-text-secondary px-1 text-center">
+                    {platform.name}
+                  </span>
+                )}
               </div>
 
               {/* small label */}
@@ -103,16 +112,16 @@ const savingsPercentage =
         <div className="mb-4">
           <div className="flex items-baseline gap-2 mb-1">
             <span className="text-2xl font-data font-bold text-primary">
-              ${bundle.price.toFixed(2)}
+              ${(bundle.bundlePrice ?? 0).toFixed(2)}
             </span>
             <span className="text-text-secondary">/month</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-text-secondary line-through">
-              ${bundle.originalPrice.toFixed(2)}
+              ${(bundle.totalPlatformsPrice ?? 0).toFixed(2)}
             </span>
             <span className="text-sm text-success font-medium">
-              Save ${bundle.savings.toFixed(2)}/mo
+              ${(bundle.savings ?? 0).toFixed(2)}
             </span>
           </div>
         </div>

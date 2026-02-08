@@ -27,14 +27,6 @@ const FilterPanel = ({ onFilterChange, totalResults }: FilterPanelProps) => {
 
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-  const categories = [
-    { id: 'entertainment', label: 'Entertainment', count: 24 },
-    { id: 'sports', label: 'Sports', count: 12 },
-    { id: 'news', label: 'News & Documentaries', count: 8 },
-    { id: 'kids', label: 'Kids & Family', count: 15 },
-    { id: 'premium', label: 'Premium', count: 10 },
-  ];
-
   const platforms = [
     { id: 'netflix', label: 'Netflix' },
     { id: 'disney', label: 'Disney+' },
@@ -62,16 +54,6 @@ const FilterPanel = ({ onFilterChange, totalResults }: FilterPanelProps) => {
     { value: 'newest', label: 'Newest First' },
   ];
 
-  const handleCategoryToggle = (categoryId: string) => {
-    const newCategories = filters.categories.includes(categoryId)
-      ? filters.categories.filter(c => c !== categoryId)
-      : [...filters.categories, categoryId];
-    
-    const newFilters = { ...filters, categories: newCategories };
-    setFilters(newFilters);
-    onFilterChange(newFilters);
-  };
-
   const handlePlatformToggle = (platformId: string) => {
     const newPlatforms = filters.platforms.includes(platformId)
       ? filters.platforms.filter(p => p !== platformId)
@@ -92,15 +74,6 @@ const FilterPanel = ({ onFilterChange, totalResults }: FilterPanelProps) => {
     onFilterChange(newFilters);
   };
 
-  const handlePriceRangeChange = (value: number, index: number) => {
-    const newPriceRange: [number, number] = [...filters.priceRange] as [number, number];
-    newPriceRange[index] = value;
-    
-    const newFilters = { ...filters, priceRange: newPriceRange };
-    setFilters(newFilters);
-    onFilterChange(newFilters);
-  };
-
   const handleSortChange = (sortValue: string) => {
     const newFilters = { ...filters, sortBy: sortValue };
     setFilters(newFilters);
@@ -109,8 +82,8 @@ const FilterPanel = ({ onFilterChange, totalResults }: FilterPanelProps) => {
 
   const clearAllFilters = () => {
     const resetFilters: FilterState = {
-      categories: [],
-      priceRange: [0, 100],
+      categories: [],        // keep but unused
+      priceRange: [0, 100],  // keep but unused
       platforms: [],
       contentTypes: [],
       sortBy: 'popularity',
@@ -119,145 +92,53 @@ const FilterPanel = ({ onFilterChange, totalResults }: FilterPanelProps) => {
     onFilterChange(resetFilters);
   };
 
-  const activeFilterCount = 
-    filters.categories.length + 
-    filters.platforms.length + 
-    filters.contentTypes.length +
-    (filters.priceRange[0] !== 0 || filters.priceRange[1] !== 100 ? 1 : 0);
+  const activeFilterCount =
+    filters.platforms.length +
+    filters.contentTypes.length;
 
   const FilterContent = () => (
     <div className="space-y-6">
-      {/* Category Chips */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-text-primary">Categories</h3>
-          {filters.categories.length > 0 && (
-            <button
-              onClick={() => {
-                const newFilters = { ...filters, categories: [] };
-                setFilters(newFilters);
-                onFilterChange(newFilters);
-              }}
-              className="text-xs text-primary hover:text-primary/80 transition-smooth"
-            >
-              Clear
-            </button>
-          )}
-        </div>
+      {/* Content Types */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-text-primary">
+          Content Types
+        </h3>
+
         <div className="flex flex-wrap gap-2">
-          {categories.map(category => (
+          {contentTypes.map(type => (
             <button
-              key={category.id}
-              onClick={() => handleCategoryToggle(category.id)}
+              key={type.id}
+              type="button"
+              onClick={() => handleContentTypeToggle(type.id)}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-smooth ${
-                filters.categories.includes(category.id)
+                filters.contentTypes.includes(type.id)
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-muted text-text-secondary hover:bg-muted/80'
               }`}
             >
-              {category.label} ({category.count})
+              {type.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Price Range */}
-      <div>
-        <h3 className="text-sm font-semibold text-text-primary mb-3">Price Range</h3>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-text-secondary">Min: ${filters.priceRange[0]}</span>
-            <span className="text-text-secondary">Max: ${filters.priceRange[1]}</span>
-          </div>
-          <div className="space-y-2">
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={filters.priceRange[0]}
-              onChange={(e) => handlePriceRangeChange(Number(e.target.value), 0)}
-              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
-            />
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={filters.priceRange[1]}
-              onChange={(e) => handlePriceRangeChange(Number(e.target.value), 1)}
-              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
-            />
-          </div>
-        </div>
-      </div>
+      {/* Divider line */}
+      <div className="h-px bg-border" />
 
-      {/* Platforms */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-text-primary">Platforms</h3>
-          {filters.platforms.length > 0 && (
-            <button
-              onClick={() => {
-                const newFilters = { ...filters, platforms: [] };
-                setFilters(newFilters);
-                onFilterChange(newFilters);
-              }}
-              className="text-xs text-primary hover:text-primary/80 transition-smooth"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-        <div className="space-y-2 max-h-48 overflow-y-auto">
-          {platforms.map(platform => (
-            <label
-              key={platform.id}
-              className="flex items-center gap-3 p-2 rounded-md hover:bg-muted cursor-pointer transition-smooth"
-            >
-              <input
-                type="checkbox"
-                checked={filters.platforms.includes(platform.id)}
-                onChange={() => handlePlatformToggle(platform.id)}
-                className="w-4 h-4 rounded border-border text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
-              />
-              <span className="text-sm text-text-primary">{platform.label}</span>
-            </label>
+      {/* Sort By (moved into the same card) */}
+      <div className="flex items-center gap-3 mt-6 mb-6">
+        <Icon name="BarsArrowDownIcon" size={20} variant="outline" className="text-text-secondary" />
+        <select
+          value={filters.sortBy}
+          onChange={(e) => handleSortChange(e.target.value)}
+          className="flex-1 lg:flex-none px-4 py-2 bg-card border border-border rounded-md text-text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background transition-smooth"
+        >
+          {sortOptions.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
           ))}
-        </div>
-      </div>
-
-      {/* Content Types */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-text-primary">Content Types</h3>
-          {filters.contentTypes.length > 0 && (
-            <button
-              onClick={() => {
-                const newFilters = { ...filters, contentTypes: [] };
-                setFilters(newFilters);
-                onFilterChange(newFilters);
-              }}
-              className="text-xs text-primary hover:text-primary/80 transition-smooth"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-        <div className="space-y-2">
-          {contentTypes.map(type => (
-            <label
-              key={type.id}
-              className="flex items-center gap-3 p-2 rounded-md hover:bg-muted cursor-pointer transition-smooth"
-            >
-              <input
-                type="checkbox"
-                checked={filters.contentTypes.includes(type.id)}
-                onChange={() => handleContentTypeToggle(type.id)}
-                className="w-4 h-4 rounded border-border text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
-              />
-              <span className="text-sm text-text-primary">{type.label}</span>
-            </label>
-          ))}
-        </div>
+        </select>
       </div>
     </div>
   );
@@ -267,7 +148,7 @@ const FilterPanel = ({ onFilterChange, totalResults }: FilterPanelProps) => {
       {/* Desktop Filter Panel */}
       <div className="hidden lg:block bg-card rounded-lg p-6 shadow-cinematic">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-heading font-semibold text-text-primary">Filters</h2>
+          <h4 className="text-lg font-heading font-semibold text-text-primary">Filters</h4>
           {activeFilterCount > 0 && (
             <button
               onClick={clearAllFilters}
@@ -298,22 +179,6 @@ const FilterPanel = ({ onFilterChange, totalResults }: FilterPanelProps) => {
         <div className="flex items-center gap-2">
           <span className="text-sm text-text-secondary">{totalResults} results</span>
         </div>
-      </div>
-
-      {/* Sort Controls - Always Visible */}
-      <div className="flex items-center gap-3 mb-6">
-        <Icon name="BarsArrowDownIcon" size={20} variant="outline" className="text-text-secondary" />
-        <select
-          value={filters.sortBy}
-          onChange={(e) => handleSortChange(e.target.value)}
-          className="flex-1 lg:flex-none px-4 py-2 bg-card border border-border rounded-md text-text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background transition-smooth"
-        >
-          {sortOptions.map(option => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
       </div>
 
       {/* Mobile Filter Slide-out */}

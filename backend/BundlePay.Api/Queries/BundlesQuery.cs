@@ -49,30 +49,18 @@ public sealed class BundlesQuery
                     .ToList();
 
                 var originalPrice = g.Sum(x => (x.ServicePrice ?? 0m) * (x.ItemQuantity ?? 1));
+                var savingsValue = Math.Max(0, originalPrice - g.Key.BundlePrice);
                 var bundleType = Enum.IsDefined(typeof(BundleType), g.Key.BundleType)
                     ? ((BundleType)g.Key.BundleType).ToString()
                     : "Unknown";
-
-                decimal originalPriceValue;
-                decimal savingsValue;
-                if (bundleType == "Template")
-                {
-                    originalPriceValue = g.Key.BundlePrice;
-                    savingsValue = Math.Max(0, originalPrice - g.Key.BundlePrice);
-                }
-                else
-                {
-                    originalPriceValue = originalPrice;
-                    savingsValue = originalPrice - g.Key.BundlePrice;
-                }
 
                 return new BundleSummaryDto
                 {
                     Id = g.Key.BundleId,
                     Name = g.Key.BundleName,
                     Description = g.Key.BundleDescription,
-                    Price = g.Key.BundlePrice,
-                    OriginalPrice = originalPriceValue,
+                    BundlePrice = g.Key.BundlePrice,
+                    TotalPlatformsPrice = originalPrice,
                     Savings = savingsValue,
                     Platforms = platforms,
                     Features = [],
