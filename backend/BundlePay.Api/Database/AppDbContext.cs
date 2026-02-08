@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<Bundle> Bundles => Set<Bundle>();
     public DbSet<Service> Services => Set<Service>();
     public DbSet<BundleItem> BundleItems => Set<BundleItem>();
+    public DbSet<Cart> Carts => Set<Cart>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

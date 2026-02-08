@@ -1,6 +1,7 @@
 using System.Data;
 using BundlePay.Api.Database;
 using BundlePay.Api.Queries;
+using BundlePay.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -70,6 +71,8 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 builder.Services.AddScoped<IDbConnection>(_ => new NpgsqlConnection(cs));
 builder.Services.AddScoped<BundlesQuery>();
 builder.Services.AddScoped<ServicesQuery>();
+builder.Services.AddScoped<BundleService>();
+builder.Services.AddScoped<CartService>();
 
 var app = builder.Build();
 
