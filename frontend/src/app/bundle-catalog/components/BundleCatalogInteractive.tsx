@@ -53,6 +53,7 @@ const BundleCatalogInteractive = ({ apiBundles, apiServices }: Props) => {
   const { loading, userEmail } = useAuth();
   const { addToCart, cartItems } = useCart();
   const [isHydrated, setIsHydrated] = useState(false);
+  const [bundlesSource, setBundlesSource] = useState<ApiBundle[]>(apiBundles ?? []);
   const [activeTab, setActiveTab] = useState<'premade' | 'custom'>('premade');
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [comparisonIds, setComparisonIds] = useState<string[]>([]);
@@ -77,7 +78,7 @@ const BundleCatalogInteractive = ({ apiBundles, apiServices }: Props) => {
     { id: 11, label: 'Cooking' },
   ];
 
-  const allBundles: Bundle[] = (apiBundles ?? []).map((b) => ({
+  const allBundles: Bundle[] = (bundlesSource ?? []).map((b) => ({
       id: b.id,
       name: b.name,
       description: b.description,
@@ -119,9 +120,28 @@ const BundleCatalogInteractive = ({ apiBundles, apiServices }: Props) => {
       ? allServices
       : allServices.filter(s => s.serviceCategory === selectedServiceCategory);
 
-    useEffect(() => {
-      setIsHydrated(true);
-    }, []);
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    setBundlesSource(apiBundles ?? []);
+  }, [apiBundles]);
+
+  const refreshBundles = async () => {
+    try {
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${apiBaseUrl}/bundles`, { cache: 'no-store' });
+      if (!response.ok) return;
+
+      const bundles = await response.json();
+      if (Array.isArray(bundles)) {
+        setBundlesSource(bundles);
+      }
+    } catch (error) {
+      console.error('Failed to refresh bundles:', error);
+    }
+  };
 
   const handleAddToCart = async (bundleId: string) => {
     if (WAITLIST_MODE) {
@@ -313,6 +333,7 @@ const BundleCatalogInteractive = ({ apiBundles, apiServices }: Props) => {
             categories={SERVICE_CATEGORIES}
             selectedCategory={selectedServiceCategory}
             onSelectCategory={setSelectedServiceCategory}
+            onBundleCreated={refreshBundles}
           />
         )}
       </div>

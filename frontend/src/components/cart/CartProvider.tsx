@@ -11,7 +11,8 @@ export type CartItem = {
   bundle?: {
     id: string;
     name: string;
-    bundlePrice: number;
+    bundlePrice?: number;
+    price?: number;
     [key: string]: any;
   };
   createdAt?: string;
@@ -45,7 +46,29 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
       const items = await fetchCart();
-      setCartItems(Array.isArray(items) ? items : []);
+      const normalizedItems = Array.isArray(items)
+        ? items.map((item) => {
+            const bundle = item?.bundle;
+            if (!bundle) return item;
+
+            const normalizedBundlePrice =
+              typeof bundle.bundlePrice === 'number'
+                ? bundle.bundlePrice
+                : typeof bundle.price === 'number'
+                  ? bundle.price
+                  : 0;
+
+            return {
+              ...item,
+              bundle: {
+                ...bundle,
+                bundlePrice: normalizedBundlePrice,
+              },
+            };
+          })
+        : [];
+
+      setCartItems(normalizedItems);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch cart';
       // Don't show error for auth errors on initial load

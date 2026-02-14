@@ -64,8 +64,13 @@ const ShoppingCartIndicator = ({ className = '' }: ShoppingCartIndicatorProps) =
                 <div className="max-h-64 overflow-y-auto">
                   {cartItems.map((item) => {
                     const bundleName = item.bundle?.name || 'Bundle';
-                    const bundlePrice = item.bundle?.bundlePrice || 0;
-                    
+                    const bundlePrice =
+                      typeof item.bundle?.bundlePrice === 'number'
+                        ? item.bundle.bundlePrice
+                        : typeof item.bundle?.price === 'number'
+                          ? item.bundle.price
+                          : 0;
+
                     return (
                       <div key={item.id} className="p-4 border-b border-border hover:bg-muted transition-smooth">
                         <div className="flex justify-between items-start mb-2">
@@ -88,7 +93,18 @@ const ShoppingCartIndicator = ({ className = '' }: ShoppingCartIndicatorProps) =
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-text-secondary">Total ({cartCount} bundles)</span>
                     <span className="text-xl font-data font-semibold text-text-primary">
-                      ${cartItems.reduce((sum, item) => sum + (item.bundle?.bundlePrice || 0), 0).toFixed(2)}/mo
+                      ${cartItems
+                        .reduce((sum, item) => {
+                          const bundlePrice =
+                            typeof item.bundle?.bundlePrice === 'number'
+                              ? item.bundle.bundlePrice
+                              : typeof item.bundle?.price === 'number'
+                                ? item.bundle.price
+                                : 0;
+
+                          return sum + bundlePrice;
+                        }, 0)
+                        .toFixed(2)}/mo
                     </span>
                   </div>
                   <Link
