@@ -246,10 +246,10 @@ export default function BuildYourOwnGrid({
 
                 <div className="mt-4 border-t border-border pt-4">
                   <div className="flex items-end justify-between">
-                    <span className="text-2xl font-heading font-semibold text-text-primary">Bundle price</span>
-                    <span className="text-3xl font-data font-bold text-success">
+                    <span className="text-xl font-heading font-semibold text-text-primary">Bundle price</span>
+                    <span className="text-2xl font-data font-bold text-success">
                       ${bundlePrice.toFixed(2)}
-                      <span className="text-lg text-text-secondary font-medium">/mo</span>
+                      <span className="text-base text-text-secondary font-medium">/mo</span>
                     </span>
                   </div>
                 </div>
